@@ -8,26 +8,28 @@ library application;
 import 'dart:io' show HttpRequest, HttpServer, HttpStatus, InternetAddress;
 import 'dart:async' show Future;
 
-import 'package:resem.pl/router.dart' show Router;
+import 'package:resem.pl/router.dart' show Router, Route;
 import 'package:resem.pl/logger.dart' show Logger;
 import 'package:resem.pl/http.dart' show HttpContext, WebSocketContext;
-
+import 'package:resem.pl/ioc.dart' show DefaultInjector, Injector;
 
 abstract class Application {
   Router get router;
   Logger get logger;
   InternetAddress get address;
+  Injector get injector;
   int get port;
 
   factory Application({
     Router router,
     Logger logger,
     InternetAddress address,
-    int port
+    int port,
+    Injector injector
   }) = DefaultApplication;
 
   Future start();
-  Future initializeRouter();
+  Future initializeRouter(List<Route> routes);
   Future initializeServer();
   Future handleHttpRequest(HttpContext context);
   Future handleWebSocketRequest(WebSocketContext context);
@@ -45,8 +47,9 @@ class DefaultApplication implements Application {
   final Injector injector;
   HttpServer _server;
 
-  DefaultApplication({this.router, this.logger, address, this.port: 443}) :
-      this.address = address ?? InternetAddress.ANY_IP_V4;
+  DefaultApplication({this.router, this.logger, address, this.port: 443, injector}) :
+      this.address = address ?? InternetAddress.ANY_IP_V4,
+      this.injector = injector ?? new DefaultInjector();
 
   @override
   Future start() async {

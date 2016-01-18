@@ -2,7 +2,7 @@ library test.resem.pl;
 
 import 'package:resem.pl/resem.pl.dart';
 import 'package:test/test.dart';
-import 'package:mockito/mockito.dart';
+// import 'package:mockito/mockito.dart';
 import 'dart:io';
 
 @TestOn("vm")
@@ -22,7 +22,7 @@ void main() {
       var req = await client.getUrl(Uri.parse('http://localhost:3331'));
       var res = await req.close();
       expect(res.statusCode, HttpStatus.OK, reason: 'valid http request to root should return status code 200 (HttpStatus.OK)');
-    }, timeout: );
+    });
 
     test("requests to non-existing resource returns HttpStatus.NOT_FOUND", () async {
       var req = await client.getUrl(Uri.parse('http://localhost:3331/non-existing-resources'));
