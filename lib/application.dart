@@ -8,7 +8,7 @@ library application;
 import 'dart:io' show HttpRequest, HttpServer, HttpStatus, InternetAddress;
 import 'dart:async' show Future;
 
-import 'package:resem.pl/router.dart' show Router, Route;
+import 'package:resem.pl/router.dart' show DefaultRouter, Route, Router;
 import 'package:resem.pl/logger.dart' show Logger;
 import 'package:resem.pl/http.dart' show HttpContext, WebSocketContext;
 import 'package:resem.pl/ioc.dart' show DefaultInjector, Injector;
@@ -35,7 +35,7 @@ abstract class Application {
   Future handleWebSocketRequest(WebSocketContext context);
   Future handleRequestError(HttpContext context, error);
   Future handleRouteNotFound(HttpContext context);
-  Future stop();
+  Future stop({bool force: false});
 }
 
 class DefaultApplication implements Application {
@@ -47,14 +47,15 @@ class DefaultApplication implements Application {
   final Injector injector;
   HttpServer _server;
 
-  DefaultApplication({this.router, this.logger, address, this.port: 443, injector}) :
+  DefaultApplication({router, this.logger, address, this.port: 443, injector}) :
       this.address = address ?? InternetAddress.ANY_IP_V4,
+      this.router = router ?? new DefaultRouter(<Route>[]),
       this.injector = injector ?? new DefaultInjector();
 
   @override
   Future start() async {
     try {
-      await initializeRouter(new List<Route>());
+      await initializeRouter(router.routes);
       return initializeServer();
     } on Error catch (e) {
       logger.error(e.toString());
@@ -102,10 +103,13 @@ class DefaultApplication implements Application {
   @override
   Future handleHttpRequest(HttpContext context) async {
     var route = await router.route(context.uri);
-
-    if(route != null) {
-    } else {
+    if(route == null) {
       handleRouteNotFound(context);
+    } else {
+      context.response
+        ..statusCode = HttpStatus.OK
+        ..write('{"success": true}')
+        ..close();
     }
   }
 
@@ -116,7 +120,10 @@ class DefaultApplication implements Application {
 
   @override
   Future handleRouteNotFound(HttpContext context) async {
-    // TODO: implement handleRouteNotFound
+    context.response
+      ..statusCode = HttpStatus.NOT_FOUND
+      ..write('Route not found')
+      ..close();
   }
 
   @override

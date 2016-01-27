@@ -39,5 +39,5 @@ class _DefaultRoute implements Route {
   const _DefaultRoute({this.verb: HttpVerb.GET, this.route, this.library: null, this.controller: null, this.action: null});
 
   @override
-  bool match(Uri uri) => route.allMatches(uri.path).length > 0;
+  bool match(Uri uri) => route.allMatches('/^'+uri.path+'\$/').length > 0;
 }
