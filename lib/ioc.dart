@@ -1,7 +1,8 @@
 /// The [ioc] library.
 library ioc;
 
-import 'dart:mirrors' show ClassMirror, MirrorSystem, MethodMirror, reflectClass, ParameterMirror;
+import 'dart:mirrors'
+    show ClassMirror, MirrorSystem, MethodMirror, reflectClass, ParameterMirror;
 
 part 'src/ioc/injector.dart';
 part 'src/ioc/binding.dart';

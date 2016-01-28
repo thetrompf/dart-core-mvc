@@ -10,7 +10,6 @@ part of logger;
 ///
 /// Extending classes must implement their own [write] method.
 abstract class Logger {
-
   /// The level mask of the logger.
   final int level;
 
@@ -22,7 +21,7 @@ abstract class Logger {
   /// Write [msg] in log-level ERROR if the ERROR_MASK
   /// is present in [level] mask other wise do not write the [Log] entry.
   void error(Object msg) {
-    if((level & ERROR_MASK) != ERROR_MASK) {
+    if ((level & ERROR_MASK) != ERROR_MASK) {
       return;
     }
     write(new Log(level: ERROR_MASK, message: msg, group: group));
@@ -31,7 +30,7 @@ abstract class Logger {
   /// Write [msg] in log-level WARNING if the WARNING_MASK
   /// is present in [level] mask other wise do not write the [Log] entry.
   void warn(Object msg) {
-    if((level & WARNING_MASK) != WARNING_MASK) {
+    if ((level & WARNING_MASK) != WARNING_MASK) {
       return;
     }
     write(new Log(level: WARNING_MASK, message: msg, group: group));
@@ -40,7 +39,7 @@ abstract class Logger {
   /// Write [msg] in log-level SUCCESS if the SUCCESS_MASK
   /// is present in [level] mask other wise do not write the [Log] entry.
   void success(Object msg) {
-    if((level & SUCCESS_MASK) != SUCCESS_MASK) {
+    if ((level & SUCCESS_MASK) != SUCCESS_MASK) {
       return;
     }
     write(new Log(level: SUCCESS_MASK, message: msg, group: group));
@@ -49,7 +48,7 @@ abstract class Logger {
   /// Write [msg] in log-level LOG if the LOG_MASK
   /// is present in [level] mask other wise do not write the [Log] entry.
   void log(Object msg) {
-    if((level & LOG_MASK) != LOG_MASK) {
+    if ((level & LOG_MASK) != LOG_MASK) {
       return;
     }
     write(new Log(level: LOG_MASK, message: msg, group: group));
@@ -58,7 +57,7 @@ abstract class Logger {
   /// Write [msg] in log-level INFO if the INFO_MASK
   /// is present in [level] mask other wise do not write the [Log] entry.
   void info(Object msg) {
-    if((level & INFO_MASK) != INFO_MASK) {
+    if ((level & INFO_MASK) != INFO_MASK) {
       return;
     }
     write(new Log(level: INFO_MASK, message: msg, group: group));
@@ -67,7 +66,7 @@ abstract class Logger {
   /// Write [msg] in log-level DEBUG if the DEBUG_MASK
   /// is present in [level] mask other wise do not write the [Log] entry.
   void debug(Object msg) {
-    if((level & DEBUG_MASK) != DEBUG_MASK) {
+    if ((level & DEBUG_MASK) != DEBUG_MASK) {
       return;
     }
     write(new Log(level: DEBUG_MASK, message: msg, group: group));
@@ -76,7 +75,7 @@ abstract class Logger {
   /// Write [msg] in log-level VERBOSE if the VERBOSE_MASK
   /// is present in [level] mask other wise do not write the [Log] entry.
   void verbose(Object msg) {
-    if((level & VERBOSE_MASK) != VERBOSE_MASK) {
+    if ((level & VERBOSE_MASK) != VERBOSE_MASK) {
       return;
     }
     write(new Log(level: VERBOSE_MASK, message: msg, group: group));

@@ -6,7 +6,6 @@ part of logger;
 /// It is in its essence just a property bag
 /// for logging information containing the log [level]
 class Log {
-
   /// The [level] of the [Log] entry.
   final int level;
 
@@ -19,6 +18,5 @@ class Log {
   /// The [timestamp] of the [Log] entry.
   final DateTime timestamp;
 
-  Log({this.level, this.message, this.group}) :
-      timestamp = new DateTime.now();
+  Log({this.level, this.message, this.group}) : timestamp = new DateTime.now();
 }

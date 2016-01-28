@@ -20,13 +20,12 @@ abstract class Application {
   Injector get injector;
   int get port;
 
-  factory Application({
-    Router router,
-    Logger logger,
-    InternetAddress address,
-    int port,
-    Injector injector
-  }) = DefaultApplication;
+  factory Application(
+      {Router router,
+      Logger logger,
+      InternetAddress address,
+      int port,
+      Injector injector}) = DefaultApplication;
 
   Future start();
   Future initializeRouter(List<Route> routes);
@@ -39,7 +38,6 @@ abstract class Application {
 }
 
 class DefaultApplication implements Application {
-
   final Router router;
   final InternetAddress address;
   final int port;
@@ -47,10 +45,10 @@ class DefaultApplication implements Application {
   final Injector injector;
   HttpServer _server;
 
-  DefaultApplication({router, this.logger, address, this.port: 443, injector}) :
-      this.address = address ?? InternetAddress.ANY_IP_V4,
-      this.router = router ?? new DefaultRouter(<Route>[]),
-      this.injector = injector ?? new DefaultInjector();
+  DefaultApplication({router, this.logger, address, this.port: 443, injector})
+      : this.address = address ?? InternetAddress.ANY_IP_V4,
+        this.router = router ?? new DefaultRouter(<Route>[]),
+        this.injector = injector ?? new DefaultInjector();
 
   @override
   Future start() async {
@@ -73,17 +71,16 @@ class DefaultApplication implements Application {
       logger.info("Server started listening on ${address.address}:${port}");
 
       _server = server;
-      await for(final HttpRequest req in _server) {
+      await for (final HttpRequest req in _server) {
         var context = new HttpContext(
             request: req,
             response: req.response,
             connectionInfo: req.connectionInfo,
-            uri: req.uri
-        );
+            uri: req.uri);
 
         try {
           handleHttpRequest(context);
-        } catch(error) {
+        } catch (error) {
           handleRequestError(context, error);
         }
       }
@@ -95,15 +92,15 @@ class DefaultApplication implements Application {
   @override
   Future handleRequestError(HttpContext context, error) async {
     context.response
-        ..statusCode = HttpStatus.INTERNAL_SERVER_ERROR
-        ..write(error)
-        ..close();
+      ..statusCode = HttpStatus.INTERNAL_SERVER_ERROR
+      ..write(error)
+      ..close();
   }
 
   @override
   Future handleHttpRequest(HttpContext context) async {
     var route = await router.route(context.uri);
-    if(route == null) {
+    if (route == null) {
       handleRouteNotFound(context);
     } else {
       context.response
@@ -131,10 +128,8 @@ class DefaultApplication implements Application {
     logger.debug('Shutting down');
     var future = _server.close(force: force);
 
-    future.then(
-        (_) => logger.info('Application shutted down'),
-        onError: (e) => logger.error(e)
-    );
+    future.then((_) => logger.info('Application shutted down'),
+        onError: (e) => logger.error(e));
 
     return future;
   }

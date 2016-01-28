@@ -7,4 +7,3 @@ part of http;
 abstract class WebSocketContext {
   HttpContext get httpContext;
 }
-

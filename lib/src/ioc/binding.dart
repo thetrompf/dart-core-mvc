@@ -9,7 +9,6 @@ part of ioc;
 /// In a future release if the [toType] is a [Function] is provided
 /// to create instances it will be invoked upon every resolution.
 abstract class Binding {
-
   /// The [Type] to bind from, typically an abstract [Type] is used.
   Type get fromType;
 
@@ -24,7 +23,6 @@ abstract class Binding {
 
 /// The default IOC binding implementation.
 class _Binding implements Binding {
-
   final Type fromType;
   Object _toType;
   Object get toType => _toType;
@@ -35,12 +33,11 @@ class _Binding implements Binding {
   /// TODO: support [Function] [toType]s
   Binding to(Object type) {
     _toType = type;
-    if(_toType is Type) {
+    if (_toType is Type) {
       _abstractMap[fromType] = this;
     } else {
       _concreteMap[fromType] = this;
     }
     return this;
   }
-
 }

@@ -1,5 +1,5 @@
 import 'package:resem.pl/resem.pl.dart';
-import 'dart:async' show Future;
+import 'dart:async' show Future, Timer;
 import 'package:resem.pl/logger.dart';
 
 //import 'package:resem.pl/resem.pl.dart' show bind, getType;
@@ -36,7 +36,7 @@ import 'package:resem.pl/logger.dart';
 //}
 
 Future main() async {
-
+  
 //  bind(DatabaseConnection).to(new PostgreSqlDatabaseConnection());
 //  bind(EntityManager).to(DefaultEntityManager);
 //  bind(AuthorizationManager).to(DefaultAuthorizationManager);
@@ -46,11 +46,24 @@ Future main() async {
 //  print(controller);
 //
 //  return;
-  Logger logger = new TtyLogger(group: 'app', groupColor: AnsiPen.yellow, level: VERBOSE_LEVEL);
+  Logger iocLogger = new TtyLogger(
+      group: 'injector', groupColor: AnsiPen.magenta, level: DEBUG_LEVEL);
+  Logger logger = new TtyLogger(
+      group: 'app', groupColor: AnsiPen.yellow, level: VERBOSE_LEVEL);
+  Logger routerLogger = new TtyLogger(
+      group: 'router', groupColor: AnsiPen.blue, level: SUCCESS_LEVEL);
+  new Timer.periodic(const Duration(seconds: 2), (_) {
+    iocLogger.debug('hans');
+  });
+
+  new Timer.periodic(const Duration(seconds: 5), (_) {
+    routerLogger.success("Incoming request at '/'");
+  });
+
   var app = new Application(router: null, logger: logger, port: 3330);
   try {
     await app.start();
-  } catch(e) {
+  } catch (e) {
     print(e);
   }
 }

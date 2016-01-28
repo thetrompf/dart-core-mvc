@@ -6,7 +6,6 @@ part of router;
 /// The only thing need is that you can go through the [routes] defined.
 /// and can start the [route] mechanism.
 abstract class Router {
-
   /// The [routes] defined in the [Application]
   List<Route> get routes;
 
@@ -22,15 +21,14 @@ abstract class Router {
 /// ot simply just implement the [Router] interface
 /// for gaining full control over the routing behavior.
 class DefaultRouter implements Router {
-
   final List<Route> routes;
 
   DefaultRouter(List<Route> this.routes);
 
   @override
   Route route(Uri uri) {
-    for(final Route route in routes) {
-      if(route.match(uri)) {
+    for (final Route route in routes) {
+      if (route.match(uri)) {
         return route;
       }
     }

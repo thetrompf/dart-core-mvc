@@ -20,15 +20,14 @@ abstract class Injector {
 /// implement a totally different [Injector] for full control of the
 /// [Application]s class instance lifecycles and configurations.
 class DefaultInjector implements Injector {
-
   DefaultInjector();
 
   Object getType(Type type) {
-    if(_concreteMap.containsKey(type)) {
+    if (_concreteMap.containsKey(type)) {
       return _concreteMap[type].toType;
     }
 
-    if(_abstractMap.containsKey(type)) {
+    if (_abstractMap.containsKey(type)) {
       return getType(_abstractMap[type].toType);
     }
 
@@ -41,16 +40,13 @@ class DefaultInjector implements Injector {
 
   /// Resolve the default constructor of the [reflectedClass].
   MethodMirror getDefaultConstructor(ClassMirror reflectedClass) {
-    return reflectedClass
-        .declarations
-        .values
-        .firstWhere((e) =>
-    e is MethodMirror &&
-        e.isConstructor &&
-        e.constructorName == defaultConstructor
-    , orElse: () {
-          throw new NoDefaultConstructorFoundException(MirrorSystem.getName(reflectedClass.simpleName));
-        });
+    return reflectedClass.declarations.values.firstWhere(
+        (e) => e is MethodMirror &&
+            e.isConstructor &&
+            e.constructorName == defaultConstructor, orElse: () {
+      throw new NoDefaultConstructorFoundException(
+          MirrorSystem.getName(reflectedClass.simpleName));
+    });
   }
 
   /// Resolve the positional [parameters].
@@ -59,10 +55,9 @@ class DefaultInjector implements Injector {
   ///       if no configuration is provided.
   List resolveParameters(List<ParameterMirror> parameters) {
     final resolvedParameters = [];
-    for(final param in parameters) {
+    for (final param in parameters) {
       resolvedParameters.add(getType(param.type.reflectedType));
     }
     return resolvedParameters;
   }
-
 }
