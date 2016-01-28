@@ -6,6 +6,8 @@ enum Color { BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE }
 /// The style codes available, including the reset style.
 enum Style { RESET, BOLD }
 
+int _LARGEST_GROUP_LENGTH_SEEN = 0;
+
 /// The ansi code for resetting the terminal
 const int RESET_CODE = 0;
 
@@ -15,41 +17,55 @@ const int BOLD_STYLE_CODE = 1;
 // The ansi color codes for foreground colors.
 /// ANSI color code for black foreground.
 const int BLACK_FOREGROUND_CODE = 30;
+
 /// ANSI color code for red foreground.
 const int RED_FOREGROUND_CODE = 31;
+
 /// ANSI color code for green foreground.
 const int GREEN_FOREGROUND_CODE = 32;
+
 /// ANSI color code for yellow foreground.
 const int YELLOW_FOREGROUND_CODE = 33;
+
 /// ANSI color code for blue foreground.
 const int BLUE_FOREGROUND_CODE = 34;
+
 /// ANSI color code for magenta foreground.
 const int MAGENTA_FOREGROUND_CODE = 35;
+
 /// ANSI color code for cyan foreground.
 const int CYAN_FOREGROUND_CODE = 36;
+
 /// ANSI color code for white foreground.
 const int WHITE_FOREGROUND_CODE = 37;
 
 // The ansi color codes for background colors.
 /// ANSI color code for black background.
 const int BLACK_BACKGROUND_CODE = 40;
+
 /// ANSI color code for red background.
 const int RED_BACKGROUND_CODE = 41;
+
 /// ANSI color code for green background.
 const int GREEN_BACKGROUND_CODE = 42;
+
 /// ANSI color code for yellow background.
 const int YELLOW_BACKGROUND_CODE = 43;
+
 /// ANSI color code for blue background.
 const int BLUE_BACKGROUND_CODE = 44;
+
 /// ANSI color code for magenta background.
 const int MAGENTA_BACKGROUND_CODE = 45;
+
 /// ANSI color code for cyan background.
 const int CYAN_BACKGROUND_CODE = 46;
+
 /// ANSI color code for white background.
 const int WHITE_BACKGROUND_CODE = 47;
 
 /// Background color map from [Color] to ansi color codes.
-final BACKGROUND_COLOR_CODES = <Color,int>{
+final BACKGROUND_COLOR_CODES = <Color, int>{
   Color.BLACK: BLACK_BACKGROUND_CODE,
   Color.RED: RED_BACKGROUND_CODE,
   Color.GREEN: GREEN_BACKGROUND_CODE,
@@ -60,9 +76,8 @@ final BACKGROUND_COLOR_CODES = <Color,int>{
   Color.WHITE: WHITE_BACKGROUND_CODE,
 };
 
-
 /// Foreground color map [Color] to ansi color codes.
-final FOREGROUND_COLOR_CODES = <Color,int>{
+final FOREGROUND_COLOR_CODES = <Color, int>{
   Color.BLACK: BLACK_FOREGROUND_CODE,
   Color.RED: RED_FOREGROUND_CODE,
   Color.GREEN: GREEN_FOREGROUND_CODE,
@@ -81,18 +96,25 @@ Pen get AnsiPen => new _Pen();
 
 /// The color used when formatting [Log] entries in [ERROR_MASK] [Log.level].
 Pen ERROR_COLOR = AnsiPen.white.bg.red;
+
 /// The color used when formatting [Log] entries in [WARNING_MASK] [Log.level].
 Pen WARNING_COLOR = AnsiPen.bg.red.bold;
+
 /// The color used when formatting [Log] entries in [SUCCESS_MASK] [Log.level].
 Pen SUCCESS_COLOR = AnsiPen.green;
+
 /// The color used when formatting [Log] entries in [LOG_MASK] [Log.level].
 Pen LOG_COLOR = AnsiPen;
+
 /// The color used when formatting [Log] entries in [INFO_MASK] [Log.level].
 Pen INFO_COLOR = AnsiPen.blue;
+
 /// The color used when formatting [Log] entries in [DEBUG_MASK] [Log.level].
 Pen DEBUG_COLOR = AnsiPen.yellow;
+
 /// The color used when formatting [Log] entries in [VERBOSE_MASK] [Log.level].
 Pen VERBOSE_COLOR = AnsiPen.magenta;
+
 /// The color used when formatting [Log.timestamp].
 Pen TIMESTAMP_COLOR = AnsiPen.cyan;
 
@@ -109,7 +131,6 @@ Pen TIMESTAMP_COLOR = AnsiPen.cyan;
 ///
 /// @todo Move all console and ANSI helpers into a utility library, or maybe just a library of its own.
 abstract class Pen {
-
   /// The [foreground] [Color] of this [Pen].
   Color get foreground;
 
@@ -162,7 +183,6 @@ abstract class Pen {
 /// Consider using a parsable [Logger] implementation e.g. [JsonLogger]
 /// in production.
 class TtyLogger extends Logger {
-
   /// The sink to write the [output] to.
   final StringSink output;
 
@@ -172,14 +192,19 @@ class TtyLogger extends Logger {
   /// Which color to use when formatting the [group].
   final Pen groupColor;
 
-  TtyLogger({
-    int level: INFO_LEVEL,
-    String group,
-    StringSink output,
-    bool this.color: true,
-    Pen this.groupColor
-  }) : super(level: level, group: group),
-       output = output ?? stdout;
+  TtyLogger(
+      {int level: INFO_LEVEL,
+      String group,
+      StringSink output,
+      bool this.color: true,
+      Pen this.groupColor})
+      : super(level: level, group: group),
+        output = output ?? stdout {
+    if (group != null) {
+      _LARGEST_GROUP_LENGTH_SEEN =
+          max(_LARGEST_GROUP_LENGTH_SEEN, group.length);
+    }
+  }
 
   /// Write [Log] entries to [output] stream.
   void write(Log log) {
@@ -187,10 +212,36 @@ class TtyLogger extends Logger {
     sb.write(formatTimestamp(log.timestamp));
     sb.write(formatGroup(log.group));
     sb.write("[");
-    sb.write(formatLevel(log.level, null));
+    var levelStr = levelToString(log.level);
+    sb.write(formatLevel(log.level, levelStr));
     sb.write("] ");
+    var padding = 7 - levelStr.length;
+    if (padding > 0) {
+      sb.write(" " * padding);
+    }
     sb.write(formatMessage(log.message, log.level, sb));
     output.write(sb.toString() + "\n");
+  }
+
+  String levelToString(int level) {
+    switch (level) {
+      case ERROR_MASK:
+        return "ERROR";
+      case WARNING_MASK:
+        return "WARNING";
+      case SUCCESS_MASK:
+        return "SUCCESS";
+      case LOG_MASK:
+        return "LOG";
+      case INFO_MASK:
+        return "INFO";
+      case DEBUG_MASK:
+        return "DEBUG";
+      case VERBOSE_MASK:
+        return "VERBOSE";
+      default:
+        throw new UnsupportedError("Unsupported log level: $level");
+    }
   }
 
   /// Format the [timestamp] that is written to the [output] stream.
@@ -200,7 +251,10 @@ class TtyLogger extends Logger {
 
   /// Format the [group] that is written to the [output] stream.
   String formatGroup(String group) {
-    return "[" + colorize(group, groupColor) + "] ";
+    return "[" +
+        colorize(group, groupColor) +
+        "] " +
+        (" " * (_LARGEST_GROUP_LENGTH_SEEN - group.length));
   }
 
   /// Apply [color] to the [string] that is written to the [output] stream.
@@ -220,19 +274,19 @@ class TtyLogger extends Logger {
   String formatLevel(int level, String msg) {
     switch (level) {
       case ERROR_MASK:
-        return colorize(msg ?? "ERROR  ", ERROR_COLOR);
+        return colorize(msg, ERROR_COLOR);
       case WARNING_MASK:
-        return colorize(msg ?? "WARNING", WARNING_COLOR);
+        return colorize(msg, WARNING_COLOR);
       case SUCCESS_MASK:
-        return colorize(msg ?? "SUCCESS", SUCCESS_COLOR);
+        return colorize(msg, SUCCESS_COLOR);
       case LOG_MASK:
-        return colorize(msg ?? "LOG    ", LOG_COLOR);
+        return colorize(msg, LOG_COLOR);
       case INFO_MASK:
-        return colorize(msg ?? "INFO   ", INFO_COLOR);
+        return colorize(msg, INFO_COLOR);
       case DEBUG_MASK:
-        return colorize(msg ?? "DEBUG  ", DEBUG_COLOR);
+        return colorize(msg, DEBUG_COLOR);
       case VERBOSE_MASK:
-        return colorize(msg ?? "VERBOSE", VERBOSE_COLOR);
+        return colorize(msg, VERBOSE_COLOR);
       default:
         throw new UnsupportedError("Unsupported log level: $level");
     }
@@ -243,7 +297,8 @@ class TtyLogger extends Logger {
   /// The [Log] information is applied to every line of this [message]
   /// which [sb] provides a string representation of.
   String formatMessage(Object message, int level, StringBuffer sb) {
-    return message.toString()
+    return message
+        .toString()
         .split("\n")
         .map((e) => formatLevel(level, e))
         .join("\n" + sb.toString());
@@ -251,7 +306,6 @@ class TtyLogger extends Logger {
 }
 
 class _Pen implements Pen {
-
   final Color foreground;
   final Color background;
   final bool isBold;
@@ -259,8 +313,12 @@ class _Pen implements Pen {
   bool _settingBackground = false;
   bool get _settingForeground => !_settingBackground;
 
-  _Pen({this.foreground: null, this.background: null, this.isBold: false, settingBackground: false}) :
-        _settingBackground = settingBackground;
+  _Pen(
+      {this.foreground: null,
+      this.background: null,
+      this.isBold: false,
+      settingBackground: false})
+      : _settingBackground = settingBackground;
 
   Pen get bg {
     _settingBackground = true;
@@ -282,61 +340,58 @@ class _Pen implements Pen {
   Pen get white => _setColor(Color.WHITE);
 
   Pen get bold {
-    if(!isBold) {
+    if (!isBold) {
       return new _Pen(
           foreground: foreground,
           background: background,
           isBold: true,
-          settingBackground: _settingForeground
-      );
+          settingBackground: _settingForeground);
     }
     return this;
   }
 
   Pen _setColor(Color color) {
-    if(_settingForeground) {
-      if(foreground != color) {
+    if (_settingForeground) {
+      if (foreground != color) {
         return new _Pen(
             foreground: color,
             background: background,
             isBold: isBold,
-            settingBackground: _settingBackground
-        );
+            settingBackground: _settingBackground);
       }
       return this;
     } else {
-      if(background != color) {
+      if (background != color) {
         return new _Pen(
             foreground: foreground,
             background: color,
             isBold: isBold,
-            settingBackground: _settingBackground
-        );
+            settingBackground: _settingBackground);
       }
       return this;
     }
   }
 
   String call(String str) {
-    if(str == null) {
+    if (str == null) {
       return '';
     }
 
     var styles = [];
-    if(isBold) {
+    if (isBold) {
       styles.add(BOLD_STYLE_CODE);
     }
 
-    if(foreground != null) {
+    if (foreground != null) {
       styles.add(FOREGROUND_COLOR_CODES[foreground]);
     }
-    if(background != null) {
+    if (background != null) {
       styles.add(BACKGROUND_COLOR_CODES[background]);
     }
 
     var sb = new StringBuffer("\x1b[0m");
 
-    if(styles.length > 0) {
+    if (styles.length > 0) {
       sb.write("\x1b[");
       sb.write(styles.join(';'));
       sb.write('m');

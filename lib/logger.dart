@@ -16,6 +16,7 @@ library logger;
 
 import 'dart:io' show stdout,stderr;
 import 'dart:convert' show JSON;
+import 'dart:math' show max;
 
 part 'src/logger/logger.dart';
 part 'src/logger/log.dart';
