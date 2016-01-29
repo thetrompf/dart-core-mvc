@@ -15,7 +15,7 @@ abstract class Router {
   /// and start the routing mechanism.
   Route route(Uri uri);
 
-  /// Process the route and fire up  the controller.
+  /// Process the route and fire up the controller, and execute [Controller.executeAction].
   Future processRoute(Route route, HttpContext context, Injector injector);
 }
 
@@ -47,7 +47,7 @@ class DefaultRouter implements Router {
         MirrorSystem.getSymbol(route.controller, library);
 
     final Type controllerType =
-        library.declarations[controllerSymbol].reflectedType;
+        (library.declarations[controllerSymbol] as ClassMirror).reflectedType;
 
     final Controller controller = injector.getType(controllerType);
 

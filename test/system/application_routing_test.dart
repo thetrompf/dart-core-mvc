@@ -1,4 +1,4 @@
-library test.resem.pl;
+library application_routing_test.system.resem.pl;
 
 import 'package:resem.pl/resem.pl.dart';
 import 'package:resem.pl/logger.dart' show SILENT_LEVEL, ERROR_LEVEL;
@@ -37,13 +37,13 @@ class TestApplication extends DefaultApplication {
 
   Future initializeRouter(List<Route> routes) async {
     routes.add(new Route(
-        library: 'test.resem.pl',
+        library: 'application_routing_test.system.resem.pl',
         controller: 'TestController',
         action: 'index',
         route: '/',
         verb: HttpVerb.GET));
     routes.add(new Route(
-        library: 'test.resem.pl',
+        library: 'application_routing_test.system.resem.pl',
         controller: 'TestController',
         action: 'throwing',
         route: '/throwing-resources',
@@ -63,7 +63,7 @@ void main() {
       await app.start();
     });
 
-    test("valid requests returns HttpStatus.OK", () async {
+    test("that are successful returns HttpStatus.OK", () async {
       var req = await client.getUrl(Uri.parse('http://localhost:3331'));
       var res = await req.close();
       expect(res.statusCode, HttpStatus.OK,
@@ -71,7 +71,7 @@ void main() {
               'valid http request to root should return status code 200 (HttpStatus.OK)');
     });
 
-    test("requests to non-existing resource returns HttpStatus.NOT_FOUND",
+    test("that hits non-existing resource returns HttpStatus.NOT_FOUND",
         () async {
       var req = await client
           .getUrl(Uri.parse('http://localhost:3331/non-existing-resources'));
@@ -81,8 +81,7 @@ void main() {
               'requesting non-exsting resources should return status code 404 (HttpStatus.NOT_FOUND)');
     });
 
-    test(
-        "request to throwing resource returns HttpStatue.INTERNAL_SERVER_ERROR",
+    test("that hits throwing resource returns HttpStatue.INTERNAL_SERVER_ERROR",
         () async {
       var req = await client
           .getUrl(Uri.parse('http://localhost:3331/throwing-resources'));
