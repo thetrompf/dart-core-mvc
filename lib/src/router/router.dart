@@ -14,6 +14,9 @@ abstract class Router {
   /// Find a route that matches the [uri]
   /// and start the routing mechanism.
   Route route(Uri uri);
+
+  /// Process the route and fire up  the controller.
+  Future processRoute(Route route, HttpContext context, Injector injector);
 }
 
 /// The [DefaultRouter] implementation,
@@ -25,7 +28,6 @@ class DefaultRouter implements Router {
 
   DefaultRouter(List<Route> this.routes);
 
-  @override
   Route route(Uri uri) {
     for (final Route route in routes) {
       if (route.match(uri)) {
@@ -33,5 +35,22 @@ class DefaultRouter implements Router {
       }
     }
     return null;
+  }
+
+  Future processRoute(
+      Route route, HttpContext context, Injector injector) async {
+    final ms = currentMirrorSystem();
+    final LibraryMirror library =
+        ms.findLibrary(MirrorSystem.getSymbol(route.library));
+
+    final Symbol controllerSymbol =
+        MirrorSystem.getSymbol(route.controller, library);
+
+    final Type controllerType =
+        library.declarations[controllerSymbol].reflectedType;
+
+    final Controller controller = injector.getType(controllerType);
+
+    await controller.executeAction(route, context);
   }
 }

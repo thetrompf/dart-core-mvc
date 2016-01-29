@@ -47,5 +47,9 @@ class _DefaultRoute implements Route {
       this.action: null});
 
   @override
-  bool match(Uri uri) => route.allMatches('/^' + uri.path + '\$/').length > 0;
+  bool match(Uri uri) {
+    RegExp r = new RegExp(r'^' + route.toString() + r'$');
+    Iterable<Match> res = r.allMatches(uri.path);
+    return res.length > 0;
+  }
 }

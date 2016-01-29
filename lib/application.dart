@@ -12,6 +12,8 @@ import 'package:resem.pl/router.dart' show DefaultRouter, Route, Router;
 import 'package:resem.pl/logger.dart' show Logger;
 import 'package:resem.pl/http.dart' show HttpContext, WebSocketContext;
 import 'package:resem.pl/ioc.dart' show DefaultInjector, Injector;
+import 'package:resem.pl/http.dart';
+import 'package:resem.pl/ioc.dart';
 
 abstract class Application {
   Router get router;
@@ -79,7 +81,7 @@ class DefaultApplication implements Application {
             uri: req.uri);
 
         try {
-          handleHttpRequest(context);
+          await handleHttpRequest(context);
         } catch (error) {
           handleRequestError(context, error);
         }
@@ -101,12 +103,9 @@ class DefaultApplication implements Application {
   Future handleHttpRequest(HttpContext context) async {
     var route = await router.route(context.uri);
     if (route == null) {
-      handleRouteNotFound(context);
+      await handleRouteNotFound(context);
     } else {
-      context.response
-        ..statusCode = HttpStatus.OK
-        ..write('{"success": true}')
-        ..close();
+      await router.processRoute(route, context, injector);
     }
   }
 

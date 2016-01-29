@@ -11,34 +11,43 @@ import 'package:resem.pl/ioc.dart';
 import 'package:resem.pl/application.dart';
 
 @TestOn("vm")
-
 class TestController extends Controller {
   Future index() async {
     return 'test';
   }
+
+  Future throwing() async {
+    throw "Must throw";
+  }
 }
 
 class TestApplication extends DefaultApplication {
-
-  TestApplication({Router router, Logger logger, InternetAddress address, int port, Injector injector}) :
-    super(
-      router: router,
-      logger: logger,
-      address: address,
-      port: port,
-      injector: injector
-    );
+  TestApplication(
+      {Router router,
+      Logger logger,
+      InternetAddress address,
+      int port,
+      Injector injector})
+      : super(
+            router: router,
+            logger: logger,
+            address: address,
+            port: port,
+            injector: injector);
 
   Future initializeRouter(List<Route> routes) async {
-    print('hans');
     routes.add(new Route(
-      library: 'test.resem.pl',
-      controller: 'TestController',
-      action: 'index',
-      route: '/',
-      verb: HttpVerb.GET
-    ));
-    print('hans2');
+        library: 'test.resem.pl',
+        controller: 'TestController',
+        action: 'index',
+        route: '/',
+        verb: HttpVerb.GET));
+    routes.add(new Route(
+        library: 'test.resem.pl',
+        controller: 'TestController',
+        action: 'throwing',
+        route: '/throwing-resources',
+        verb: HttpVerb.GET));
   }
 }
 
@@ -48,26 +57,39 @@ void main() {
     HttpClient client = null;
 
     setUp(() async {
-      app = new TestApplication(logger: new TtyLogger(group: 'test', level: ERROR_LEVEL), port: 3331);
+      app = new TestApplication(
+          logger: new TtyLogger(group: 'test', level: ERROR_LEVEL), port: 3331);
       client = new HttpClient();
-      print('erik');
       await app.start();
-      print('erik2');
     });
 
     test("valid requests returns HttpStatus.OK", () async {
-      print('requesting');
       var req = await client.getUrl(Uri.parse('http://localhost:3331'));
-      print('requested');
       var res = await req.close();
-      print('closed');
-      expect(res.statusCode, HttpStatus.OK, reason: 'valid http request to root should return status code 200 (HttpStatus.OK)');
+      expect(res.statusCode, HttpStatus.OK,
+          reason:
+              'valid http request to root should return status code 200 (HttpStatus.OK)');
     });
 
-    test("requests to non-existing resource returns HttpStatus.NOT_FOUND", () async {
-      var req = await client.getUrl(Uri.parse('http://localhost:3331/non-existing-resources'));
+    test("requests to non-existing resource returns HttpStatus.NOT_FOUND",
+        () async {
+      var req = await client
+          .getUrl(Uri.parse('http://localhost:3331/non-existing-resources'));
       var res = await req.close();
-      expect(res.statusCode, HttpStatus.NOT_FOUND, reason: 'requesting non-exsting resources should return status code 404 (HttpStatus.NOT_FOUND)');
+      expect(res.statusCode, HttpStatus.NOT_FOUND,
+          reason:
+              'requesting non-exsting resources should return status code 404 (HttpStatus.NOT_FOUND)');
+    });
+
+    test(
+        "request to throwing resource returns HttpStatue.INTERNAL_SERVER_ERROR",
+        () async {
+      var req = await client
+          .getUrl(Uri.parse('http://localhost:3331/throwing-resources'));
+      var res = await req.close();
+      expect(res.statusCode, HttpStatus.INTERNAL_SERVER_ERROR,
+          reason:
+              'requesting throwing resources should return status code 500 (HttpStatus.INTERNAL_SERVER_ERROR)');
     });
 
     tearDown(() async {
