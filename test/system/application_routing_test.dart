@@ -5,19 +5,19 @@ import 'package:resem.pl/logger.dart' show SILENT_LEVEL, ERROR_LEVEL;
 import 'package:test/test.dart';
 // import 'package:mockito/mockito.dart';
 import 'dart:io';
-import 'dart:async' show Future;
+import 'dart:async' show Future, Timer, Duration;
 import 'package:resem.pl/http.dart';
 import 'package:resem.pl/ioc.dart';
 import 'package:resem.pl/application.dart';
+import 'package:resem.pl/action_result.dart' show ActionResult, StringResult;
 
 @TestOn("vm")
 class TestController extends Controller {
-  Future index() async {
-    return 'test';
-  }
-
-  Future throwing() async {
-    throw "Must throw";
+  Future<ActionResult> index() async => stringResult('test');
+  Future<ActionResult> throwing() async => throw "Must throw";
+  Future<ActionResult> timeout() async {
+    return new Future.delayed(
+        const Duration(seconds: 5), () => stringResult('timeout'));
   }
 }
 
@@ -36,18 +36,25 @@ class TestApplication extends DefaultApplication {
             injector: injector);
 
   Future initializeRouter(List<Route> routes) async {
-    routes.add(new Route(
+    routes.add(const Route(
         library: 'application_routing_test.system.resem.pl',
         controller: 'TestController',
         action: 'index',
         route: '/',
         verb: HttpVerb.GET));
-    routes.add(new Route(
+    routes.add(const Route(
         library: 'application_routing_test.system.resem.pl',
         controller: 'TestController',
         action: 'throwing',
         route: '/throwing-resources',
         verb: HttpVerb.GET));
+    routes.add(const Route(
+        library: 'application_routing_test.system.resem.pl',
+        controller: 'TestController',
+        action: 'timeout',
+        route: '/timeout',
+        verb: HttpVerb.GET,
+        timeout: 1));
   }
 }
 
@@ -81,7 +88,7 @@ void main() {
               'requesting non-exsting resources should return status code 404 (HttpStatus.NOT_FOUND)');
     });
 
-    test("that hits throwing resource returns HttpStatue.INTERNAL_SERVER_ERROR",
+    test("that hits throwing resource returns HttpStatus.INTERNAL_SERVER_ERROR",
         () async {
       var req = await client
           .getUrl(Uri.parse('http://localhost:3331/throwing-resources'));
@@ -89,6 +96,16 @@ void main() {
       expect(res.statusCode, HttpStatus.INTERNAL_SERVER_ERROR,
           reason:
               'requesting throwing resources should return status code 500 (HttpStatus.INTERNAL_SERVER_ERROR)');
+    });
+
+    test(
+        "that hits a resource that times out returns HttpStatus.GATEWAY_TIMEOUT",
+        () async {
+      var req = await client.getUrl(Uri.parse('http://localhost:3331/timeout'));
+      var res = await req.close();
+      expect(res.statusCode, HttpStatus.GATEWAY_TIMEOUT,
+          reason:
+              'requesting a route that runs over the timeout threshold should return status code 504 (HttpStatus.GATEWAY_TIMEOUT)');
     });
 
     tearDown(() async {

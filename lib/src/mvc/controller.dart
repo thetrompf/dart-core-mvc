@@ -6,13 +6,20 @@ part of mvc;
 /// from the [Router] when a route is matched, or be collected
 /// as a controller by the route annotation reader.
 abstract class Controller {
+  Future<StringResult> stringResult(String output) async =>
+      new StringResult(output);
+
+  Future<JsonResult> jsonResult(Object output) async => new JsonResult(output);
+
   Future executeAction(Route route, HttpContext context) async {
     final controllerMirror = reflect(this);
     final resultMirror =
         controllerMirror.invoke(MirrorSystem.getSymbol(route.action), []);
-    context.response
-      ..statusCode = 200
-      ..write(await resultMirror.reflectee)
-      ..close();
+
+    final ActionResult actionResult = await resultMirror.reflectee;
+
+    var resultContext = new ResultContext(httpContext: context);
+
+    return actionResult.executeResult(resultContext);
   }
 }

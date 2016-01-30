@@ -41,7 +41,8 @@ class DefaultInjector implements Injector {
   /// Resolve the default constructor of the [reflectedClass].
   MethodMirror getDefaultConstructor(ClassMirror reflectedClass) {
     return reflectedClass.declarations.values.firstWhere(
-        (e) => e is MethodMirror &&
+        (e) =>
+            e is MethodMirror &&
             e.isConstructor &&
             e.constructorName == defaultConstructor, orElse: () {
       throw new NoDefaultConstructorFoundException(

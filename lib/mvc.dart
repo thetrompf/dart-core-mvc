@@ -5,5 +5,7 @@ import 'dart:async' show Future;
 import 'dart:mirrors' show MirrorSystem, reflect;
 import 'package:resem.pl/router.dart' show Route;
 import 'package:resem.pl/http.dart' show HttpContext;
+import 'package:resem.pl/action_result.dart'
+    show ActionResult, JsonResult, ResultContext, StringResult;
 
 part 'src/mvc/controller.dart';

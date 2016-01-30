@@ -19,12 +19,16 @@ abstract class Route {
   /// The [verb] to be called.
   HttpVerb get verb;
 
-  factory Route(
+  /// The request [timeout] in seconds.
+  int get timeout;
+
+  const factory Route(
       {HttpVerb verb,
       Pattern route,
       String library,
       String controller,
-      String action}) = _DefaultRoute;
+      String action,
+      int timeout}) = _DefaultRoute;
 
   /// Finds out whether or not the [uri] matches the [route] [Pattern] provided.
   bool match(Uri uri);
@@ -38,13 +42,15 @@ class _DefaultRoute implements Route {
   final String action;
   final Pattern route;
   final HttpVerb verb;
+  final int timeout;
 
   const _DefaultRoute(
       {this.verb: HttpVerb.GET,
       this.route,
       this.library: null,
       this.controller: null,
-      this.action: null});
+      this.action: null,
+      this.timeout: 30});
 
   @override
   bool match(Uri uri) {
