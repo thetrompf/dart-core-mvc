@@ -1,20 +1,25 @@
 library application_routing_test.system.resem.pl;
 
-import 'package:resem.pl/resem.pl.dart';
-import 'package:resem.pl/logger.dart' show SILENT_LEVEL, ERROR_LEVEL;
+import 'dart:async' show Future, Timer;
+import 'dart:io' show HttpClient, HttpStatus, InternetAddress;
+
+import 'package:resem.pl/action_result.dart' show ActionResult, StringResult;
+import 'package:resem.pl/application.dart' show Application, DefaultApplication;
+import 'package:resem.pl/http.dart' show HttpVerb;
+import 'package:resem.pl/ioc.dart' show Injector;
+import 'package:resem.pl/logger.dart' show Logger, TtyLogger, SILENT_LEVEL, ERROR_LEVEL;
+import 'package:resem.pl/router.dart' show Route, Router;
+import 'package:resem.pl/mvc.dart' show Controller;
 import 'package:test/test.dart';
 // import 'package:mockito/mockito.dart';
-import 'dart:io';
-import 'dart:async' show Future, Timer, Duration;
-import 'package:resem.pl/http.dart';
-import 'package:resem.pl/ioc.dart';
-import 'package:resem.pl/application.dart';
-import 'package:resem.pl/action_result.dart' show ActionResult, StringResult;
 
 @TestOn("vm")
 class TestController extends Controller {
+
   Future<ActionResult> index() async => stringResult('test');
+
   Future<ActionResult> throwing() async => throw "Must throw";
+
   Future<ActionResult> timeout() async {
     return new Future.delayed(
         const Duration(seconds: 5), () => stringResult('timeout'));

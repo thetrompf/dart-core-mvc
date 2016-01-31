@@ -43,7 +43,7 @@ abstract class Application {
   /// Initializing the server, binding the network sockets.
   /// and setting up the incoming request loop for listening
   /// to request, and call the [handleHttpRequest] and [handleWebSocketRequest]
-  /// respectingly.
+  /// respectively.
   Future<HttpServer> initializeServer();
 
   /// All incoming http requests will call this method with a [context]
@@ -51,7 +51,7 @@ abstract class Application {
   Future handleHttpRequest(HttpContext context);
 
   /// All incoming web socket requests will call this method with a [context].
-  /// descriping the parameters of the web socket request.
+  /// describing the parameters of the web socket request.
   Future handleWebSocketRequest(WebSocketContext context);
 
   /// This method is called for every uncaught error made by controller code,

@@ -100,19 +100,19 @@ Pen ERROR_COLOR = AnsiPen.white.bg.red;
 /// The color used when formatting [Log] entries in [WARNING_MASK] [Log.level].
 Pen WARNING_COLOR = AnsiPen.bg.red.bold;
 
-/// The color used when formatting [Log] entries in [SUCCESS_MASK] [Log.level].
+/// The color used when formatting [Log] entries in success [Log.level].
 Pen SUCCESS_COLOR = AnsiPen.green;
 
-/// The color used when formatting [Log] entries in [LOG_MASK] [Log.level].
+/// The color used when formatting [Log] entries in log [Log.level].
 Pen LOG_COLOR = AnsiPen;
 
-/// The color used when formatting [Log] entries in [INFO_MASK] [Log.level].
+/// The color used when formatting [Log] entries in info [Log.level].
 Pen INFO_COLOR = AnsiPen.blue;
 
-/// The color used when formatting [Log] entries in [DEBUG_MASK] [Log.level].
+/// The color used when formatting [Log] entries in debug [Log.level].
 Pen DEBUG_COLOR = AnsiPen.yellow;
 
-/// The color used when formatting [Log] entries in [VERBOSE_MASK] [Log.level].
+/// The color used when formatting [Log] entries in verbose [Log.level].
 Pen VERBOSE_COLOR = AnsiPen.magenta;
 
 /// The color used when formatting [Log.timestamp].
@@ -129,8 +129,9 @@ Pen TIMESTAMP_COLOR = AnsiPen.cyan;
 ///     Pen pen = AnsiPen.red.bg.black.bold;
 ///     print(pen('Red bold text on black background'));
 ///
-/// @todo Move all console and ANSI helpers into a utility library, or maybe just a library of its own.
+/// @todo Move all console and ANSI helpers into a utility library, or maybe even a library of its own.
 abstract class Pen {
+
   /// The [foreground] [Color] of this [Pen].
   Color get foreground;
 
@@ -183,6 +184,7 @@ abstract class Pen {
 /// Consider using a parsable [Logger] implementation e.g. [JsonLogger]
 /// in production.
 class TtyLogger extends Logger {
+
   /// The sink to write the [output] to.
   final StringSink output;
 

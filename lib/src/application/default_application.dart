@@ -2,6 +2,7 @@ part of application;
 
 /// The default implementation of [Application].
 class DefaultApplication implements Application {
+
   final Router router;
   final InternetAddress address;
   final int port;
