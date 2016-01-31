@@ -7,7 +7,8 @@ import 'package:resem.pl/action_result.dart' show ActionResult, StringResult;
 import 'package:resem.pl/application.dart' show Application, DefaultApplication;
 import 'package:resem.pl/http.dart' show HttpVerb;
 import 'package:resem.pl/ioc.dart' show Injector;
-import 'package:resem.pl/logger.dart' show Logger, TtyLogger, SILENT_LEVEL, ERROR_LEVEL;
+import 'package:resem.pl/logger.dart'
+    show Logger, TtyLogger, SILENT_LEVEL, ERROR_LEVEL;
 import 'package:resem.pl/router.dart' show Route, Router;
 import 'package:resem.pl/mvc.dart' show Controller;
 import 'package:test/test.dart';
@@ -15,7 +16,6 @@ import 'package:test/test.dart';
 
 @TestOn("vm")
 class TestController extends Controller {
-
   Future<ActionResult> index() async => stringResult('test');
 
   Future<ActionResult> throwing() async => throw "Must throw";
@@ -64,59 +64,64 @@ class TestApplication extends DefaultApplication {
 }
 
 void main() {
-  group("Simple requests", () {
-    Application app = null;
-    HttpClient client = null;
+  group("System", () {
+    group("Status codes", () {
+      Application app = null;
+      HttpClient client = null;
 
-    setUp(() async {
-      app = new TestApplication(
-          logger: new TtyLogger(group: 'test', level: ERROR_LEVEL), port: 3331);
-      client = new HttpClient();
-      await app.start();
-    });
+      setUp(() async {
+        app = new TestApplication(
+            logger: new TtyLogger(group: 'test', level: ERROR_LEVEL),
+            port: 3331);
+        client = new HttpClient();
+        await app.start();
+      });
 
-    test("that are successful returns HttpStatus.OK", () async {
-      var req = await client.getUrl(Uri.parse('http://localhost:3331'));
-      var res = await req.close();
-      expect(res.statusCode, HttpStatus.OK,
-          reason:
-              'valid http request to root should return status code 200 (HttpStatus.OK)');
-    });
+      test("A successful request returns HttpStatus.OK", () async {
+        var req = await client.getUrl(Uri.parse('http://localhost:3331'));
+        var res = await req.close();
+        expect(res.statusCode, HttpStatus.OK,
+            reason:
+                'valid http request to root should return status code 200 (HttpStatus.OK)');
+      });
 
-    test("that hits non-existing resource returns HttpStatus.NOT_FOUND",
-        () async {
-      var req = await client
-          .getUrl(Uri.parse('http://localhost:3331/non-existing-resources'));
-      var res = await req.close();
-      expect(res.statusCode, HttpStatus.NOT_FOUND,
-          reason:
-              'requesting non-exsting resources should return status code 404 (HttpStatus.NOT_FOUND)');
-    });
+      test("Requesting a non-existing resource returns HttpStatus.NOT_FOUND",
+          () async {
+        var req = await client
+            .getUrl(Uri.parse('http://localhost:3331/non-existing-resources'));
+        var res = await req.close();
+        expect(res.statusCode, HttpStatus.NOT_FOUND,
+            reason:
+                'requesting non-exsting resources should return status code 404 (HttpStatus.NOT_FOUND)');
+      });
 
-    test("that hits throwing resource returns HttpStatus.INTERNAL_SERVER_ERROR",
-        () async {
-      var req = await client
-          .getUrl(Uri.parse('http://localhost:3331/throwing-resources'));
-      var res = await req.close();
-      expect(res.statusCode, HttpStatus.INTERNAL_SERVER_ERROR,
-          reason:
-              'requesting throwing resources should return status code 500 (HttpStatus.INTERNAL_SERVER_ERROR)');
-    });
+      test(
+          "Requesting a resource with an uncaught throw returns HttpStatus.INTERNAL_SERVER_ERROR",
+          () async {
+        var req = await client
+            .getUrl(Uri.parse('http://localhost:3331/throwing-resources'));
+        var res = await req.close();
+        expect(res.statusCode, HttpStatus.INTERNAL_SERVER_ERROR,
+            reason:
+                'requesting throwing resources should return status code 500 (HttpStatus.INTERNAL_SERVER_ERROR)');
+      });
 
-    test(
-        "that hits a resource that times out returns HttpStatus.GATEWAY_TIMEOUT",
-        () async {
-      var req = await client.getUrl(Uri.parse('http://localhost:3331/timeout'));
-      var res = await req.close();
-      expect(res.statusCode, HttpStatus.GATEWAY_TIMEOUT,
-          reason:
-              'requesting a route that runs over the timeout threshold should return status code 504 (HttpStatus.GATEWAY_TIMEOUT)');
-    });
+      test(
+          "Requesting a resource that times out returns HttpStatus.GATEWAY_TIMEOUT",
+          () async {
+        var req =
+            await client.getUrl(Uri.parse('http://localhost:3331/timeout'));
+        var res = await req.close();
+        expect(res.statusCode, HttpStatus.GATEWAY_TIMEOUT,
+            reason:
+                'requesting a route that runs over the timeout threshold should return status code 504 (HttpStatus.GATEWAY_TIMEOUT)');
+      });
 
-    tearDown(() async {
-      await app.stop();
-      app = null;
-      client = null;
+      tearDown(() async {
+        await app.stop();
+        app = null;
+        client = null;
+      });
     });
   });
 }

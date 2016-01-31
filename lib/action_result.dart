@@ -10,3 +10,7 @@ part 'src/action_result/action_result.dart';
 part 'src/action_result/result_context.dart';
 part 'src/action_result/string_result.dart';
 part 'src/action_result/json_result.dart';
+
+abstract class Encodable {
+  Map encode(Set visited);
+}

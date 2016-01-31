@@ -131,7 +131,6 @@ Pen TIMESTAMP_COLOR = AnsiPen.cyan;
 ///
 /// @todo Move all console and ANSI helpers into a utility library, or maybe even a library of its own.
 abstract class Pen {
-
   /// The [foreground] [Color] of this [Pen].
   Color get foreground;
 
@@ -184,7 +183,6 @@ abstract class Pen {
 /// Consider using a parsable [Logger] implementation e.g. [JsonLogger]
 /// in production.
 class TtyLogger extends Logger {
-
   /// The sink to write the [output] to.
   final StringSink output;
 

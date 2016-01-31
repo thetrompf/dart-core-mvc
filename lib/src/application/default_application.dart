@@ -2,7 +2,6 @@ part of application;
 
 /// The default implementation of [Application].
 class DefaultApplication implements Application {
-
   final Router router;
   final InternetAddress address;
   final int port;
@@ -67,12 +66,22 @@ class DefaultApplication implements Application {
   Future handleHttpRequest(HttpContext context) async {
     final route = await router.route(context.uri);
     if (route == null) {
-      await handleRouteNotFound(context);
+      return handleRouteNotFound(context);
     } else {
-      if (route.timeout != null) {
-        context.response.deadline = new Duration(seconds: route.timeout);
+      Timer timeout;
+      try {
+        if (route.timeout > 0) {
+          timeout = new Timer(new Duration(seconds: (route.timeout ?? 30)), () {
+            timeout = null;
+            context.response
+              ..statusCode = HttpStatus.GATEWAY_TIMEOUT
+              ..close();
+          });
+        }
+        await router.processRoute(route, context, injector);
+      } finally {
+        timeout?.cancel();
       }
-      await router.processRoute(route, context, injector);
     }
   }
 

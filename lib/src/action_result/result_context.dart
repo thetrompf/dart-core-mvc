@@ -15,14 +15,13 @@ abstract class ResultContext {
 
 class _DefaultResultContext implements ResultContext {
   final HttpContext httpContext;
-  final HttpResponse response;
+  HttpResponse get response => httpContext.response;
   final int statusCode;
   final ContentType contentType;
 
   _DefaultResultContext(
       {httpContext, this.statusCode: 200, ContentType contentType})
       : this.httpContext = httpContext,
-        response = httpContext.response,
         this.contentType = contentType ??
             new ContentType('application', 'json', charset: 'utf-8');
 }

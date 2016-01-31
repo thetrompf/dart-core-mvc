@@ -5,7 +5,7 @@ class StringResult implements ActionResult {
   StringResult(this.output);
 
   Future executeResult(ResultContext context) async {
-    context.httpContext.response
+    context.response
       ..statusCode = context.statusCode
       ..headers.contentType = context.contentType
       ..write(output)
