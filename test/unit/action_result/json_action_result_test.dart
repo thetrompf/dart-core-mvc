@@ -8,21 +8,13 @@ import 'dart:io' show HttpHeaders, HttpResponse;
 import 'dart:convert' show JsonUnsupportedObjectError;
 
 @TestOn('vm')
-class MockHttpResponse extends Mock implements HttpResponse {
-  noSuchMethod(i) => super.noSuchMethod(i);
-}
+class MockHttpResponse extends Mock implements HttpResponse {}
 
-class MockHttpHeaders extends Mock implements HttpHeaders {
-  noSuchMethod(i) => super.noSuchMethod(i);
-}
+class MockHttpHeaders extends Mock implements HttpHeaders {}
 
-class MockHttpContext extends Mock implements HttpContext {
-  noSuchMethod(i) => super.noSuchMethod(i);
-}
+class MockHttpContext extends Mock implements HttpContext {}
 
-class MockResultContext extends Mock implements ResultContext {
-  noSuchMethod(i) => super.noSuchMethod(i);
-}
+class MockResultContext extends Mock implements ResultContext {}
 
 class Person {
   final int id;

@@ -13,7 +13,7 @@ abstract class Router {
 
   /// Find a route that matches the [uri]
   /// and start the routing mechanism.
-  Route route(Uri uri);
+  Route route(HttpRequest request);
 
   /// Process the route and fire up the controller, and execute [Controller.executeAction].
   Future processRoute(Route route, HttpContext context, Injector injector);
@@ -28,9 +28,10 @@ class DefaultRouter implements Router {
 
   DefaultRouter(List<Route> this.routes);
 
-  Route route(Uri uri) {
+  Route route(HttpRequest req) {
+    HttpVerb method = new HttpVerb.fromString(req.method);
     for (final Route route in routes) {
-      if (route.match(uri)) {
+      if (route.match(req.uri, method)) {
         return route;
       }
     }

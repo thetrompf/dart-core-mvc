@@ -64,7 +64,7 @@ class DefaultApplication implements Application {
 
   @override
   Future handleHttpRequest(HttpContext context) async {
-    final route = await router.route(context.uri);
+    final route = await router.route(context.request);
     if (route == null) {
       return handleRouteNotFound(context);
     } else {

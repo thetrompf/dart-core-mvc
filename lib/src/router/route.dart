@@ -31,7 +31,7 @@ abstract class Route {
       int timeout}) = _DefaultRoute;
 
   /// Finds out whether or not the [uri] matches the [route] [Pattern] provided.
-  bool match(Uri uri);
+  bool match(Uri uri, HttpVerb verb);
 }
 
 /// The default implementation of a [Route].
@@ -53,7 +53,10 @@ class _DefaultRoute implements Route {
       this.timeout: 30});
 
   @override
-  bool match(Uri uri) {
+  bool match(Uri uri, HttpVerb method) {
+    if (method != verb) {
+      return false;
+    }
     RegExp r = new RegExp(r'^' + route.toString() + r'$');
     Iterable<Match> res = r.allMatches(uri.path);
     return res.length > 0;

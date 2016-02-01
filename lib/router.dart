@@ -12,6 +12,7 @@ import 'dart:mirrors'
         LibraryMirror,
         MirrorSystem,
         currentMirrorSystem;
+import 'dart:io' show HttpRequest;
 
 part 'src/router/router.dart';
 part 'src/router/route.dart';
