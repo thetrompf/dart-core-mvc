@@ -27,8 +27,8 @@ void main() {
         test(
             "Test that creating enum instances from string that doesn't exists",
             () {
-          expect(
-              new TestEnum.fromString('NON-EXISTING'), throwsUnsupportedError);
+          expect(() => new TestEnum.fromString('NON-EXISTING'),
+              throwsUnsupportedError);
         });
       });
     });
