@@ -16,7 +16,7 @@ void main() {
       var router;
 
       setUp(() {
-        var routes = <Route>[
+        const routes = const <Route>[
           const Route(
               verb: HttpVerb.GET,
               route: r'/',

@@ -24,7 +24,9 @@ abstract class Enum<T> {
       if (val.isStatic && val.isGetter) {
         var reflectedValue = mirror.getField(symbol).reflectee as Enum;
         if (reflectedValue._value == _value) {
-          return MirrorSystem.getName(symbol);
+          return MirrorSystem.getName(mirror.simpleName) +
+              '.' +
+              MirrorSystem.getName(symbol);
         }
       }
     }

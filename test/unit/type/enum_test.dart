@@ -22,14 +22,16 @@ void main() {
   group('Unit', () {
     group('Type', () {
       group('Enum', () {
-        test('Test that different enum instances of same value are equal', () {
+        test('Different enum instances of same value are equal', () {
           expect(TestEnum.VALUE1, new TestEnum.fromString('VALUE1'));
         });
-        test(
-            "Test that creating enum instances from string that doesn't exists",
-            () {
+        test("Creating enum instances from string that doesn't exists", () {
           expect(() => new TestEnum.fromString('NON-EXISTING'),
               throwsUnsupportedError);
+        });
+
+        test('enumToString returns predictable representation of the Enum', () {
+          expect(TestEnum.VALUE1.toString(), equals('TestEnum.VALUE1'));
         });
       });
     });
