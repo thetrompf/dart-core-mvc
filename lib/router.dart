@@ -1,10 +1,8 @@
 /// The [router] library.
 library router;
 
-import 'package:resem.pl/http.dart' show HttpContext, HttpVerb;
-import 'package:resem.pl/ioc.dart' show Injector;
-import 'package:resem.pl/mvc.dart' show Controller;
 import 'dart:async' show Future;
+import 'dart:io' show HttpRequest;
 import 'dart:mirrors'
     show
         ClassMirror,
@@ -12,7 +10,10 @@ import 'dart:mirrors'
         LibraryMirror,
         MirrorSystem,
         currentMirrorSystem;
-import 'dart:io' show HttpRequest;
 
-part 'src/router/router.dart';
+import 'package:resem.pl/http.dart' show HttpContext, HttpVerb;
+import 'package:resem.pl/ioc.dart' show Injector;
+import 'package:resem.pl/mvc.dart' show Controller;
+
 part 'src/router/route.dart';
+part 'src/router/router.dart';

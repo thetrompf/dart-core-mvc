@@ -1,8 +1,9 @@
 library enum_test.unit.resem.pl;
 
-import 'package:test/test.dart';
-import 'package:resem.pl/type.dart' show Enum;
 import 'dart:mirrors' show reflectClass;
+
+import 'package:resem.pl/type.dart' show Enum;
+import 'package:test/test.dart';
 
 var testMirror = reflectClass(TestEnum);
 

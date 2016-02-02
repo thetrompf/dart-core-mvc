@@ -9,8 +9,8 @@ import 'package:resem.pl/http.dart' show HttpVerb;
 import 'package:resem.pl/ioc.dart' show Injector;
 import 'package:resem.pl/logger.dart'
     show Logger, TtyLogger, SILENT_LEVEL, ERROR_LEVEL;
-import 'package:resem.pl/router.dart' show Route, Router;
 import 'package:resem.pl/mvc.dart' show Controller;
+import 'package:resem.pl/router.dart' show Route, Router;
 import 'package:test/test.dart';
 
 @TestOn("vm")

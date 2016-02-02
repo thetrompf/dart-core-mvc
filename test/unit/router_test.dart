@@ -1,10 +1,11 @@
 library router_test.unit.resem.pl;
 
-import 'package:test/test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:resem.pl/router.dart';
 import 'dart:io' show HttpRequest;
+
+import 'package:mockito/mockito.dart';
 import 'package:resem.pl/http.dart' show HttpVerb;
+import 'package:resem.pl/router.dart';
+import 'package:test/test.dart';
 
 @TestOn('vm')
 class MockHttpRequest extends Mock implements HttpRequest {}

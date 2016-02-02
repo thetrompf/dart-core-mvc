@@ -1,11 +1,12 @@
 library json_action_result_test.unit.resem.pl;
 
-import 'package:test/test.dart';
+import 'dart:convert' show JsonUnsupportedObjectError;
+import 'dart:io' show HttpHeaders, HttpResponse;
+
 import 'package:mockito/mockito.dart';
 import 'package:resem.pl/action_result.dart' show JsonResult, ResultContext;
 import 'package:resem.pl/http.dart' show HttpContext;
-import 'dart:io' show HttpHeaders, HttpResponse;
-import 'dart:convert' show JsonUnsupportedObjectError;
+import 'package:test/test.dart';
 
 @TestOn('vm')
 class MockHttpResponse extends Mock implements HttpResponse {}

@@ -14,13 +14,13 @@
 /// command-line.
 library logger;
 
-import 'dart:io' show stdout, stderr;
 import 'dart:convert' show JSON;
+import 'dart:io' show stdout, stderr;
 import 'dart:math' show max;
 
-part 'src/logger/logger.dart';
-part 'src/logger/log.dart';
 part 'src/logger/json_logger.dart';
+part 'src/logger/log.dart';
+part 'src/logger/logger.dart';
 part 'src/logger/tty_logger.dart';
 
 /// The error mask, if this mask is present in [Logger.level]
