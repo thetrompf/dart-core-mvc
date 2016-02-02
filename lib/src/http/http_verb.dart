@@ -18,4 +18,11 @@ class HttpVerb extends Enum<String> {
       new Enum.fromString(type.toUpperCase(), _VerbMirror);
 
   String toString() => super.enumToString(_VerbMirror);
+
+  bool operator ==(other) {
+    if (other is String) {
+      return value == other;
+    }
+    return super == (other);
+  }
 }

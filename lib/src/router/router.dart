@@ -29,9 +29,8 @@ class DefaultRouter implements Router {
   DefaultRouter(List<Route> this.routes);
 
   Route route(HttpRequest req) {
-    HttpVerb method = new HttpVerb.fromString(req.method);
     for (final Route route in routes) {
-      if (route.match(req.uri, method)) {
+      if (route.match(req.uri, req.method)) {
         return route;
       }
     }
