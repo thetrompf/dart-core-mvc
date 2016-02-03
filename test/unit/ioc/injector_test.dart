@@ -104,13 +104,13 @@ void main() {
         });
 
         test(
-            'non-bound types can be resolved as long all it is the root type to get',
+            'non-bound types can be resolved as long dependencies in the graph are bound',
             () {
           var testConn = createTestConn();
           bind(DatabaseConnection).to(testConn);
           bind(EntityManager).to(TestEntityManager);
           bind(AuthenticationManager).to(TestAuthenticationManager);
-          bind(AuthorizationManager).to(AuthorizationManager);
+          bind(AuthorizationManager).to(TestAuthorizationManager);
 
           var resolved = injector.getType(TestController) as TestController;
           expect(resolved, new isInstanceOf<TestController>());
