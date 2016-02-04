@@ -52,7 +52,7 @@ class DefaultInjector implements Injector {
 
   /// Resolve the positional [parameters].
   /// TODO: implement resolving of named parameters,
-  ///       skip resolving of optional parameters/paramters with default values
+  ///       skip resolving of optional parameters/parameters with default values
   ///       if no configuration is provided.
   List resolveParameters(List<ParameterMirror> parameters) {
     final resolvedParameters = [];
