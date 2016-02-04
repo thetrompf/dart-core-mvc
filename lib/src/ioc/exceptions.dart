@@ -16,3 +16,33 @@ class NoDefaultConstructorFoundException implements IocException {
     return '';
   }
 }
+
+/// This exception is thrown if a [Binding] is bound to
+/// a type that causes resolving of the type go into infinite loop.
+class CyclicDependencyException implements IocException {
+  final String message;
+
+  const CyclicDependencyException([this.message]);
+
+  String toString() {
+    if (message == null) {
+      return 'CyclicDependencyException';
+    }
+    return 'CyclicDependencyException: $message';
+  }
+}
+
+/// This exception is throw if a [Binding] is bound to
+/// a [Type] that is not a subtype of the [Binding.fromType].
+class IncompatibleBindingException implements IocException {
+  final String message;
+
+  const IncompatibleBindingException([this.message]);
+
+  String toString() {
+    if (message == null) {
+      return 'IncompatibleBindingException';
+    }
+    return 'IncompatibleBindingException: $message';
+  }
+}

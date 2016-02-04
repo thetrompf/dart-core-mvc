@@ -34,6 +34,19 @@ class _Binding implements Binding {
   Binding to(Object type) {
     _toType = type;
     if (_toType is Type) {
+      if (_toType == fromType) {
+        throw new CyclicDependencyException(
+            'The fromType and toType must not be equal');
+      }
+
+      var toTypeRefl = reflectType(_toType);
+      var fromTypeRefl = reflectType(fromType);
+      if (!toTypeRefl.isSubtypeOf(fromTypeRefl)) {
+        String toType = MirrorSystem.getName(toTypeRefl.simpleName);
+        String fromType = MirrorSystem.getName(fromTypeRefl.simpleName);
+        throw new IncompatibleBindingException(
+            'The type $toType must be compatible (subtype of) the type it is binding to $fromType');
+      }
       _abstractMap[fromType] = this;
     } else {
       _concreteMap[fromType] = this;

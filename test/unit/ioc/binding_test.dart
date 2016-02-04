@@ -1,12 +1,20 @@
 library ioc_binding_test.unit.resem.pl;
 
-import 'package:test/test.dart';
 import 'package:resem.pl/ioc.dart'
-    show bind, abstractMapCopy, concreteMapCopy, Binding;
+    show
+        Binding,
+        CyclicDependencyException,
+        IncompatibleBindingException,
+        abstractMapCopy,
+        bind,
+        concreteMapCopy;
+import 'package:test/test.dart';
 
 class TestType {}
 
-class TestAbstractType {}
+class TestAbstractType implements TestType {}
+
+class TestIncompatibleType {}
 
 void main() {
   group('Unit', () {
@@ -27,6 +35,18 @@ void main() {
 
           var concreteBinding = bind(TestType).to(new TestAbstractType());
           expect(concreteMapCopy, containsPair(TestType, concreteBinding));
+        });
+
+        test('Bindings causing circular dependencies throws', () {
+          var binding = bind(TestType);
+          expect(() => binding.to(TestType),
+              throwsA(new isInstanceOf<CyclicDependencyException>()));
+        });
+
+        test('Binding so throw on mismatching abstract binding types', () {
+          var binding = bind(TestType);
+          expect(() => binding.to(TestIncompatibleType),
+              throwsA(new isInstanceOf<IncompatibleBindingException>()));
         });
       });
     });

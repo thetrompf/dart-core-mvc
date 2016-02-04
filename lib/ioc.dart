@@ -2,7 +2,13 @@
 library ioc;
 
 import 'dart:mirrors'
-    show ClassMirror, MirrorSystem, MethodMirror, reflectClass, ParameterMirror;
+    show
+        ClassMirror,
+        MethodMirror,
+        MirrorSystem,
+        ParameterMirror,
+        reflectClass,
+        reflectType;
 
 part 'src/ioc/binding.dart';
 part 'src/ioc/exceptions.dart';
