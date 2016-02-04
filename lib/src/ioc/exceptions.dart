@@ -13,7 +13,7 @@ class NoDefaultConstructorFoundException implements IocException {
   const NoDefaultConstructorFoundException(this.type);
 
   String toString() {
-    return '';
+    return 'NoDefaultConstructorFoundException: $type has no default constructor';
   }
 }
 
