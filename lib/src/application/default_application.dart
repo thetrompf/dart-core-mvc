@@ -36,6 +36,9 @@ class DefaultApplication implements Application {
       logger.info("Server started listening on ${address.address}:${port}");
 
       _server = server;
+
+      ProcessSignal.SIGINT.watch().first.then((_) => stop());
+
       await for (final HttpRequest req in _server) {
         var context = new HttpContext(
             request: req,

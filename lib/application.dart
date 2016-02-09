@@ -6,7 +6,7 @@
 library application;
 
 import 'dart:async' show Future, Timer;
-import 'dart:io' show HttpRequest, HttpServer, HttpStatus, InternetAddress;
+import 'dart:io' show HttpRequest, HttpServer, HttpStatus, InternetAddress, ProcessSignal;
 
 import 'package:resem.pl/http.dart' show HttpContext, WebSocketContext;
 import 'package:resem.pl/ioc.dart' show DefaultInjector, Injector;
