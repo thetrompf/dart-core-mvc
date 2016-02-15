@@ -1,4 +1,4 @@
-library simple_request_test.system.resem.pl;
+library simple_request_test.integration.resem.pl;
 
 import 'dart:async' show Future, Timer;
 import 'dart:io' show HttpClient, HttpStatus, InternetAddress;
@@ -41,19 +41,19 @@ class TestApplication extends DefaultApplication {
 
   Future initializeRouter(List<Route> routes) async {
     routes.add(const Route(
-        library: 'simple_request_test.system.resem.pl',
+        library: 'simple_request_test.integration.resem.pl',
         controller: 'TestController',
         action: 'index',
         route: '/',
         verb: HttpVerb.GET));
     routes.add(const Route(
-        library: 'simple_request_test.system.resem.pl',
+        library: 'simple_request_test.integration.resem.pl',
         controller: 'TestController',
         action: 'throwing',
         route: '/throwing-resources',
         verb: HttpVerb.GET));
     routes.add(const Route(
-        library: 'simple_request_test.system.resem.pl',
+        library: 'simple_request_test.integration.resem.pl',
         controller: 'TestController',
         action: 'timeout',
         route: '/timeout',

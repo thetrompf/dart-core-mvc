@@ -26,7 +26,9 @@ class DefaultApplication implements Application {
   }
 
   @override
-  Future initializeRouter(List<Route> routes) async {}
+  Future initializeRouter(List<Route> routes) async {
+    addAnnotatedRoutes(routes);
+  }
 
   @override
   Future initializeServer() async {

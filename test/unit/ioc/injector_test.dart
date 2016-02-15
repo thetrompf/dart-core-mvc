@@ -116,6 +116,14 @@ void main() {
           expect(resolved, new isInstanceOf<TestController>());
         });
 
+        test('types can be bound to closures that return subtypes of from type', () {
+          DatabaseConnection testConn = createTestConn();
+          bind(DatabaseConnection).to(() => testConn);
+
+          var resolved = injector.getType(DatabaseConnection) as DatabaseConnection;
+          expect(resolved, same(testConn));
+        }, skip: 'TODO: implement IOC with support of closures bindings');
+
         tearDown(() {
           injector = null;
         });

@@ -46,11 +46,96 @@ class DefaultRouter implements Router {
     final Symbol controllerSymbol =
         MirrorSystem.getSymbol(route.controller, library);
 
-    final Type controllerType =
-        (library.declarations[controllerSymbol] as ClassMirror).reflectedType;
+    final controllerMirror = library.declarations[controllerSymbol] as ClassMirror;
+    final authenticationFilters = _getAuthenticationFilters(controllerMirror);
 
+    final filterContext = new FilterContext(httpContext: context);
+    final authenticationResult = authenticationFilters.fold(null, (prev, filter) async {
+      if(prev != null) {
+        return prev;
+      }
+      return await filter.executeAuthenticationFilter(filterContext);
+    });
+
+    if(authenticationResult != null) {
+      context.response
+        ..statusCode = HttpStatus.UNAUTHORIZED
+        ..close();
+      return;
+    }
+
+    final authorizationFilters = _getAuthorizationFilters(controllerMirror);
+    final authorizationResult = authorizationFilters.fold(null, (prev, filter) async {
+      if(prev != null) {
+        return prev;
+      }
+      return await filter.executeAuthorizationFilter(filterContext);
+    });
+
+    if(authorizationResult != null) {
+      context.response
+        ..statusCode = HttpStatus.UNAUTHORIZED
+        ..close();
+      return;
+    }
+
+    final actionFilters = _getActionFilters(controllerMirror);
+    final filterResult = actionFilters.fold(null, (prev, filter) async {
+      if(prev != null) {
+        return prev;
+      }
+      return await filter.executeActionFilter(filterContext);
+    });
+
+    if(filterResult != null) {
+      context.response
+        ..statusCode = HttpStatus.UNAUTHORIZED
+        ..close();
+      return;
+    }
+
+    final Type controllerType = controllerMirror.reflectedType;
     final Controller controller = injector.getType(controllerType);
 
     await controller.executeAction(route, context);
   }
+}
+
+final _authenticationFilterType = reflectType(AuthenticationFilter);
+Iterable<AuthenticationFilter> _getAuthenticationFilters(ClassMirror controllerMirror) {
+  List<AuthenticationFilter> filters = [];
+  for(final actionMirror in controllerMirror.instanceMembers.values) {
+    filters.addAll(
+      actionMirror.metadata
+        .where((InstanceMirror annotation) => annotation.type.isSubtypeOf(_authenticationFilterType))
+        .map((InstanceMirror annotation) => annotation.reflectee)
+    );
+  }
+  return filters;
+}
+
+final _authorizationFilterType = reflectType(AuthorizationFilter);
+Iterable<AuthorizationFilter> _getAuthorizationFilters(ClassMirror controllerMirror) {
+  List<AuthorizationFilter> filters = [];
+  for(final actionMirror in controllerMirror.instanceMembers.values) {
+    filters.addAll(
+      actionMirror.metadata
+        .where((InstanceMirror annotation) => annotation.type.isSubtypeOf(_authorizationFilterType))
+        .map((InstanceMirror annotation) => annotation.reflectee)
+    );
+  }
+  return filters;
+}
+
+final _actionFilterType = reflectType(ActionFilter);
+Iterable<ActionFilter> _getActionFilters(ClassMirror controllerMirror) {
+  List<ActionFilter> filters = [];
+  for(final actionMirror in controllerMirror.instanceMembers.values) {
+    filters.addAll(
+      actionMirror.metadata
+        .where((InstanceMirror annotation) => annotation.type.isSubclassOf(_actionFilterType))
+        .map((InstanceMirror annotation) => annotation.reflectee)
+    );
+  }
+  return filters;
 }

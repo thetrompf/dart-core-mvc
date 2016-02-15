@@ -10,3 +10,4 @@ import 'package:resem.pl/http.dart' show HttpContext;
 import 'package:resem.pl/router.dart' show Route;
 
 part 'src/mvc/controller.dart';
+part 'src/mvc/model.dart';
