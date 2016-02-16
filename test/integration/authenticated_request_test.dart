@@ -103,56 +103,87 @@ class TestApplication extends DefaultApplication {
 }
 
 void main() {
-  Application app;
-  HttpClient client;
-  setUp(() async {
-    app = new TestApplication(
-        logger: new TtyLogger(group: 'test', level: ERROR_LEVEL),
-        port: 3335);
-    client = new HttpClient();
-    await app.start();
-  });
+  group('Request actions with authentication filters', () {
+    Application app;
+    HttpClient client;
+    setUp(() async {
+      app = new TestApplication(
+          logger: new TtyLogger(group: 'test', level: ERROR_LEVEL),
+          port: 3335);
+      client = new HttpClient();
+      await app.start();
+    });
 
-  test("Request against actions where authentication filter conditions aren't met should return HttpStatus.UNAUTHORIZED (401)", () async {
-    var req = await client.getUrl(Uri.parse('http://localhost:3335/my-profile'));
-    var res = await req.close();
-    expect(res.statusCode, HttpStatus.UNAUTHORIZED,
-        reason:
-        'Unauthorized requests should return status code 401 (HttpStatus.UNAUTHORIZED)');
-  });
+    test("where conditions aren't met should "
+        "return HttpStatus.UNAUTHORIZED (401)", () async {
+      var req = await client.getUrl(
+          Uri.parse(
+            r'http://localhost:3335/my-profile'
+          )
+      );
+      var res = await req.close();
+      expect(res.statusCode, HttpStatus.UNAUTHORIZED,
+          reason:
+          'Unauthorized requests should '
+              'return status code 401 (HttpStatus.UNAUTHORIZED)');
+    });
 
-  test("Request against actions where authentication is required and use is authenticated should return HttpStatus.OK (200)", () async {
-    var req = await client.getUrl(Uri.parse('http://localhost:3335/token-auth-test?authnToken=Test'));
-    var res = await req.close();
-    expect(res.statusCode, HttpStatus.OK,
-        reason: 'When authentication filter criterias are met the request should return status code 200 (HttpStatus.OK)');
-  });
+    test("where conditions are met should "
+        "return HttpStatus.OK (200)", () async {
+      var req = await client.getUrl(
+          Uri.parse(
+            r'http://localhost:3335/token-auth-test?authnToken=Test'
+          )
+      );
+      var res = await req.close();
+      expect(res.statusCode, HttpStatus.OK,
+          reason: 'When authentication filter criterias are met the request '
+              'should return status code 200 (HttpStatus.OK)');
+    });
 
-  test("Request against actions with multiple authentication filters if one passes the request should return HttpStatus.OK (200)", () async {
-    var req = await client.getUrl(Uri.parse('http://localhost:3335/multiple-auth'));
-    var res = await req.close();
-    expect(res.statusCode, HttpStatus.OK,
-        reason: 'Request should return code 200 (HttpStatus.OK) because WinAuth filter passes');
-  });
+    test("if one passes the request should return HttpStatus.OK (200)", () async {
+      var req = await client.getUrl(
+          Uri.parse(
+              r'http://localhost:3335/multiple-auth'
+          )
+      );
+      var res = await req.close();
+      expect(res.statusCode, HttpStatus.OK,
+          reason: 'Request should return code 200 (HttpStatus.OK) '
+              'because WinAuth filter passes');
+    });
 
-  test("Request against actions with composite authentication filters where a filter doesn't pass should fail", () async {
-    var req = await client.getUrl(Uri.parse('http://localhost:3335/composite-auth'));
-    var res = await req.close();
-    expect(res.statusCode, HttpStatus.UNAUTHORIZED,
-        reason: "TokenAuth does not pass so the request should return 401 (HttpStatus.UNAUTHORIZED)");
-  });
+    test("where a filter inside a composite filter doesn't "
+        "should return 401 (HttpStatus.UNAUTHORIZED)", () async {
+      var req = await client.getUrl(
+          Uri.parse(
+              r'http://localhost:3335/composite-auth'
+          )
+      );
+      var res = await req.close();
+      expect(res.statusCode, HttpStatus.UNAUTHORIZED,
+          reason: "TokenAuth does not pass so the request "
+              "should return 401 (HttpStatus.UNAUTHORIZED)");
+    });
 
-  test("Request against action with composite authentcaition filters where all filters passes should succeed", () async {
-    var req = await client.getUrl(Uri.parse('http://localhost:3335/composite-auth?authnToken=Test'));
-    var res = await req.close();
+    test("where all filters inside a composite filter passes "
+        "should return 200 (HttpStatus.OK)", () async {
+      var req = await client.getUrl(
+          Uri.parse(
+              r'http://localhost:3335/composite-auth?authnToken=Test'
+          )
+      );
+      var res = await req.close();
 
-    expect(res.statusCode, HttpStatus.OK,
-        reason: 'All filters pass thus the request should return 200 (HttpStatus.OK)');
-  });
+      expect(res.statusCode, HttpStatus.OK,
+          reason: 'All filters pass thus the request '
+              'should return 200 (HttpStatus.OK)');
+    });
 
-  tearDown(() async {
-    await app.stop(force: true);
-    app = null;
-    client = null;
+    tearDown(() async {
+      await app.stop(force: true);
+      app = null;
+      client = null;
+    });
   });
 }
