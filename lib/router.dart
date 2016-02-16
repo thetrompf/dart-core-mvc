@@ -1,7 +1,7 @@
 /// The [router] library.
 library router;
 
-import 'dart:async' show Future;
+import 'dart:async' show Future, Stream;
 import 'dart:io' show HttpRequest, HttpStatus;
 import 'dart:mirrors'
     show ClassMirror, DeclarationMirror, InstanceMirror, LibraryMirror, MethodMirror, MirrorSystem, currentMirrorSystem, reflectClass, reflectType;
@@ -9,7 +9,7 @@ import 'dart:mirrors'
 import 'package:resem.pl/http.dart' show HttpContext, HttpVerb;
 import 'package:resem.pl/ioc.dart' show Injector;
 import 'package:resem.pl/mvc.dart' show Controller;
-import 'package:resem.pl/action_filter.dart' show ActionFilter, AuthenticationFilter, AuthorizationFilter, FilterContext;
+import 'package:resem.pl/action_filter.dart' show ActionFilter, AuthenticationFilter, AuthorizationFilter, FilterContext, FilterPassResult;
 
 part 'src/router/route.dart';
 part 'src/router/router.dart';

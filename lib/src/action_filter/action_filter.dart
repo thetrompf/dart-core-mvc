@@ -11,6 +11,9 @@ class DefaultFilterContext implements FilterContext {
 }
 
 class FilterResult {}
+class FilterPassResult implements FilterResult {
+  const FilterPassResult();
+}
 
 abstract class ActionFilter {
   Future<FilterResult> executeActionFilter(FilterContext context);
