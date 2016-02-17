@@ -9,7 +9,8 @@ import 'dart:mirrors'
 import 'package:resem.pl/http.dart' show HttpContext, HttpVerb;
 import 'package:resem.pl/ioc.dart' show Injector;
 import 'package:resem.pl/mvc.dart' show Controller;
-import 'package:resem.pl/action_filter.dart' show ActionFilter, AuthenticationFilter, AuthorizationFilter, FilterContext, ActionFilterException;
+import 'package:resem.pl/action_filter.dart' show ActionFilter, ActionFilterException, AuthenticationFilter, AuthenticationFilterContext, AuthorizationFilter, FilterContext;
+import 'package:resem.pl/authentication.dart';
 
 part 'src/router/route.dart';
 part 'src/router/router.dart';

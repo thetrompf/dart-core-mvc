@@ -50,7 +50,7 @@ class DefaultRouter implements Router {
     final actionMirror =
         controllerMirror.instanceMembers[MirrorSystem.getSymbol(route.action)];
 
-    if(!await _processAllFilters(context, actionMirror)) {
+    if(!await _processAllFilters(context, actionMirror, injector)) {
       return;
     }
 
@@ -61,34 +61,41 @@ class DefaultRouter implements Router {
   }
 }
 
-Future<bool> _processAllFilters(HttpContext context, MethodMirror actionMirror) async {
-  final filterContext = new FilterContext(httpContext: context);
+Future<bool> _processAllFilters(HttpContext context, MethodMirror actionMirror, Injector injector) async {
+  final authnFilters = _getAuthenticationFilters(actionMirror);
+  if (authnFilters.length > 0) {
 
-  final authenticationFilters = _getAuthenticationFilters(actionMirror);
-  if (authenticationFilters.length > 0) {
-    var futures = authenticationFilters
-        .map((f) => f.executeAuthenticationFilter(filterContext));
+    // TODO: Setup application defaults in DI
+    final authnManager = /**injector.getType(AuthenticationManager)*/ null as AuthenticationManager;
+    final authnContext = new AuthenticationFilterContext(
+        httpContext: context,
+        authnManager: authnManager);
 
-    if (!await _processFilters(futures, context)) {
+    var futures = authnFilters
+        .map((f) => f.executeAuthenticationFilter(authnContext));
+
+    if (!await _processFilters(futures, context, injector)) {
       return false;
     }
   }
 
   final authorizationFilters = _getAuthorizationFilters(actionMirror);
   if (authorizationFilters.length > 0) {
+    var filterContext = new FilterContext(httpContext: context);
     var futures = authorizationFilters
         .map((f) => f.executeAuthorizationFilter(filterContext));
 
-    if (!await _processFilters(futures, context)) {
+    if (!await _processFilters(futures, context, injector)) {
       return false;
     }
   }
 
   final actionFilters = _getActionFilters(actionMirror);
   if (actionFilters.length > 0) {
-    var futures =
-    actionFilters.map((f) => f.executeActionFilter(filterContext));
-    if (!await _processFilters(futures, context)) {
+    var filterContext = new FilterContext(httpContext: context);
+    var futures = actionFilters
+        .map((f) => f.executeActionFilter(filterContext));
+    if (!await _processFilters(futures, context, injector)) {
       return false;
     }
   }
@@ -97,7 +104,7 @@ Future<bool> _processAllFilters(HttpContext context, MethodMirror actionMirror) 
 }
 
 Future<bool> _processFilters(
-    Iterable<Future> filters, HttpContext context) async {
+    Iterable<Future> filters, HttpContext context, Injector injector) async {
   bool failed = false;
   for(final filter in filters) {
     try {
