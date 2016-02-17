@@ -1,13 +1,23 @@
 library authenticated_request_test.integration.resem.pl;
 
+import 'dart:async'
+    show Future, Stream;
+import 'dart:io'
+    show HttpClient, HttpStatus;
+
 import 'package:test/test.dart';
-import 'package:resem.pl/mvc.dart' show Controller, Model;
-import 'dart:async' show Future, Stream;
-import 'package:resem.pl/action_result.dart' show ActionResult;
-import 'package:resem.pl/resem.pl.dart' show Application, DefaultApplication, HttpVerb, Route;
-import 'package:resem.pl/logger.dart' show Logger, TtyLogger, ERROR_LEVEL;
-import 'dart:io' show HttpClient, HttpStatus;
-import 'package:resem.pl/action_filter.dart' show AuthenticationFilter, FilterContext, FilterResult, FilterPassResult;
+
+import 'package:resem.pl/mvc.dart'
+    show Controller, Model;
+import 'package:resem.pl/action_result.dart'
+    show ActionResult;
+import 'package:resem.pl/resem.pl.dart'
+    show Application, DefaultApplication, HttpVerb, Route;
+import 'package:resem.pl/logger.dart'
+    show Logger, TtyLogger, ERROR_LEVEL;
+import 'package:resem.pl/action_filter.dart'
+    show AuthenticationFilter, FilterContext,
+    AuthenticationFilterException, CompositeAuthenticationRequired;
 
 const TokenAuth = const TokenAuthenticationRequired();
 class TokenAuthenticationRequired implements AuthenticationFilter {
@@ -15,12 +25,11 @@ class TokenAuthenticationRequired implements AuthenticationFilter {
   const TokenAuthenticationRequired();
 
   @override
-  Future<FilterResult> executeAuthenticationFilter(FilterContext context) async {
+  Future executeAuthenticationFilter(FilterContext context) async {
     var params = context.httpContext.request.requestedUri.queryParameters;
-    if(params.containsKey('authnToken') && params['authnToken'] == 'Test') {
-      return const FilterPassResult();
+    if(!params.containsKey('authnToken') || params['authnToken'] != 'Test') {
+      throw new AuthenticationFilterException('Invalid token');
     }
-    return new FilterResult();
   }
 }
 
@@ -30,8 +39,8 @@ class FailAuthentication implements AuthenticationFilter {
   const FailAuthentication();
 
   @override
-  Future<FilterResult> executeAuthenticationFilter(FilterContext context) async {
-    return new FilterResult();
+  Future executeAuthenticationFilter(FilterContext context) async {
+    throw new AuthenticationFilterException('Fail!');
   }
 }
 
@@ -41,12 +50,10 @@ class WinAuthentication implements AuthenticationFilter {
   const WinAuthentication();
 
   @override
-  Future<FilterResult> executeAuthenticationFilter(FilterContext context) async {
-    return const FilterPassResult();
-  }
+  Future executeAuthenticationFilter(FilterContext context) async {}
 }
 
-const WinTokenAuth = const CompositeAuth(const [WinAuth, TokenAuth]);
+const WinTokenAuth = const CompositeAuthenticationRequired(const [WinAuth, TokenAuth]);
 
 class TestController extends Controller {
 
@@ -55,8 +62,8 @@ class TestController extends Controller {
     return jsonResult({'success': true});
   }
 
-  @Route(route: r'/my-profile')
   @FailAuth
+  @Route(route: r'/my-profile')
   Future<ActionResult> myProfile() async {
     return jsonResult({'name': 'Test'});
   }
@@ -67,35 +74,18 @@ class TestController extends Controller {
     return jsonResult({'success': true});
   }
 
+  @TokenAuth @FailAuth @WinAuth
   @Route(route: r'/multiple-auth')
-  @TokenAuth
-  @FailAuth
-  @WinAuth
   Future<ActionResult> multipleAuth() async {
     return jsonResult({'win': true});
   }
 
-  @Route(route: r'/composite-auth')
   @WinTokenAuth
+  @Route(route: r'/composite-auth')
   Future<ActionResult> compositeAuthFail() async {
     return jsonResult({'fail': true});
   }
 
-}
-
-class CompositeAuth implements AuthenticationFilter {
-  final Iterable<AuthenticationFilter> filters;
-  const CompositeAuth(this.filters);
-
-  @override
-  Future<FilterResult> executeAuthenticationFilter(FilterContext context) async {
-    return await filters.fold(const FilterPassResult(), (prev, filter) async {
-      if(await prev is! FilterPassResult) {
-        return prev;
-      }
-      return filter.executeAuthenticationFilter(context);
-    });
-  }
 }
 
 class TestApplication extends DefaultApplication {
@@ -181,7 +171,7 @@ void main() {
     });
 
     tearDown(() async {
-      await app.stop(force: true);
+      await app.stop();
       app = null;
       client = null;
     });

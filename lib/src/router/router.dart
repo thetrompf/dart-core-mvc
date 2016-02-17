@@ -98,11 +98,17 @@ Future<bool> _processAllFilters(HttpContext context, MethodMirror actionMirror) 
 
 Future<bool> _processFilters(
     Iterable<Future> filters, HttpContext context) async {
-  final filterResult = await new Stream.fromFutures(filters).firstWhere(
-      (result) => result is FilterPassResult,
-      defaultValue: () async => null);
+  bool failed = false;
+  for(final filter in filters) {
+    try {
+      await filter;
+      return true;
+    } on ActionFilterException {
+      failed = true;
+    }
+  }
 
-  if (filterResult is! FilterPassResult) {
+  if(failed) {
     context.response
       ..statusCode = HttpStatus.UNAUTHORIZED
       ..close();
