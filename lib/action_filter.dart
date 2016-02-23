@@ -36,6 +36,7 @@ library action_filter;
 import 'dart:async' show Future;
 import 'package:resem.pl/http.dart' show HttpContext;
 import 'package:resem.pl/authentication.dart' show AuthenticationManager;
+import 'package:resem.pl/metadata.dart' show Annotation;
 
 part 'src/action_filter/action_filter.dart';
 part 'src/action_filter/authentication_filter.dart';

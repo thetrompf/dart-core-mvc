@@ -11,7 +11,7 @@ part of action_filter;
 ///
 /// In order require multiple authentication filters to pass use
 /// the [CompositeAuthenticationRequired] filter.
-abstract class AuthenticationFilter {
+abstract class AuthenticationFilter implements Annotation {
 
   /// This method is called by the [Router] in the authentication
   /// lifecycle phase.

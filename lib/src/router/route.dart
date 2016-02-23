@@ -3,7 +3,7 @@ part of router;
 /// The [Route] interface containing
 /// information about a [controller] and [action] pair
 /// to be called when a [verb] and [route] match is found by the [Router].
-abstract class Route {
+abstract class Route implements Annotation {
   /// The [library] where the [controller] lives.
   String get library;
 

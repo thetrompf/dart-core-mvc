@@ -66,7 +66,7 @@ Future<bool> _processAllFilters(HttpContext context, MethodMirror actionMirror, 
   if (authnFilters.length > 0) {
 
     // TODO: Setup application defaults in DI
-    final authnManager = /**injector.getType(AuthenticationManager)*/ null as AuthenticationManager;
+    final authnManager = /**injector.getType(AuthenticationManager)*/ null;
     final authnContext = new AuthenticationFilterContext(
         httpContext: context,
         authnManager: authnManager);
@@ -125,28 +125,16 @@ Future<bool> _processFilters(
   return true;
 }
 
-final _authenticationFilterType = reflectType(AuthenticationFilter);
 Iterable<AuthenticationFilter> _getAuthenticationFilters(
     MethodMirror actionMirror) {
-  return actionMirror.metadata
-      .where((InstanceMirror annotation) =>
-          annotation.type.isSubtypeOf(_authenticationFilterType))
-      .map((InstanceMirror annotation) => annotation.reflectee);
+  return new Metadata<AuthenticationFilter>.fromMethodMirror(actionMirror);
 }
 
-final _authorizationFilterType = reflectType(AuthorizationFilter);
 Iterable<AuthorizationFilter> _getAuthorizationFilters(
     MethodMirror actionMirror) {
-  return actionMirror.metadata
-      .where((InstanceMirror annotation) =>
-          annotation.type.isSubtypeOf(_authorizationFilterType))
-      .map((InstanceMirror annotation) => annotation.reflectee);
+  return new Metadata<AuthorizationFilter>.fromMethodMirror(actionMirror);
 }
 
-final _actionFilterType = reflectType(ActionFilter);
 Iterable<ActionFilter> _getActionFilters(MethodMirror actionMirror) {
-  return actionMirror.metadata
-      .where((InstanceMirror annotation) =>
-          annotation.type.isSubclassOf(_actionFilterType))
-      .map((InstanceMirror annotation) => annotation.reflectee);
+  return new Metadata<ActionFilter>.fromMethodMirror(actionMirror);
 }

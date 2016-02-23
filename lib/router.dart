@@ -10,15 +10,13 @@ import 'package:resem.pl/http.dart' show HttpContext, HttpVerb;
 import 'package:resem.pl/ioc.dart' show Injector;
 import 'package:resem.pl/mvc.dart' show Controller;
 import 'package:resem.pl/action_filter.dart' show ActionFilter, ActionFilterException, AuthenticationFilter, AuthenticationFilterContext, AuthorizationFilter, FilterContext;
-import 'package:resem.pl/authentication.dart';
+import 'package:resem.pl/authentication.dart' show AuthenticationManager;
+import 'package:resem.pl/metadata.dart' show Annotation, Metadata;
 
 part 'src/router/route.dart';
 part 'src/router/router.dart';
 
-
-
 final ClassMirror controllerMirror = reflectClass(Controller);
-final ClassMirror routeMirror = reflectClass(Route);
 
 Iterable<Route> _getLibraryRoutes(LibraryMirror libraryMirror) {
   final routes = [];
@@ -28,11 +26,7 @@ Iterable<Route> _getLibraryRoutes(LibraryMirror libraryMirror) {
     }
     classMirror as ClassMirror;
     for(final methodMirror in classMirror.instanceMembers.values) {
-      for(final InstanceMirror annotationMirror in methodMirror.metadata) {
-        if(!annotationMirror.type.isSubtypeOf(routeMirror)) {
-          continue;
-        }
-        Route annotation = annotationMirror.reflectee;
+      for(final Route annotation in new Metadata<Route>.fromMethodMirror(methodMirror)) {
         routes.add(new Route(
             library: MirrorSystem.getName(libraryMirror.simpleName),
             controller: MirrorSystem.getName(classMirror.simpleName),

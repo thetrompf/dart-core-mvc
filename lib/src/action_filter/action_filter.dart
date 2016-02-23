@@ -8,7 +8,7 @@ part of action_filter;
 /// If a single filter fails the controller action will not be executed
 /// and the request will stop and notify the user with content
 /// for the resulting [FilterResult].
-abstract class ActionFilter {
+abstract class ActionFilter implements Annotation {
 
   /// This callback is invoked by the [Router]
   /// in the action result lifecycle phase of the application.

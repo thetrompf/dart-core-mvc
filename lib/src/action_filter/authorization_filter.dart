@@ -1,6 +1,6 @@
 part of action_filter;
 
-abstract class AuthorizationFilter {
+abstract class AuthorizationFilter implements Annotation {
   Future executeAuthorizationFilter(FilterContext context);
 }
 
