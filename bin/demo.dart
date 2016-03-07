@@ -15,7 +15,7 @@ class DemoApplication extends DefaultApplication {
   DemoApplication({Logger logger, int port}) : super(logger: logger, port: port);
 
   Future initializeRouter(List<Route> routes) async {
-    routes.add(const Route(route: r'/', library: 'demo.resem.pl', controller: 'DemoController', action: 'index'));
+    routes.add(const Route(r'/', library: 'demo.resem.pl', controller: 'DemoController', action: 'index'));
   }
 }
 

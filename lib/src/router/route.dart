@@ -23,8 +23,8 @@ abstract class Route implements Annotation {
   int get timeout;
 
   const factory Route(
-      {HttpVerb verb,
       Pattern route,
+      {HttpVerb verb,
       String library,
       String controller,
       String action,
@@ -37,16 +37,16 @@ abstract class Route implements Annotation {
 /// The default implementation of a [Route].
 /// It just acts like a property bag once it is constructed.
 class _DefaultRoute implements Route {
+  final Pattern route;
+  final HttpVerb verb;
   final String library;
   final String controller;
   final String action;
-  final Pattern route;
-  final HttpVerb verb;
   final int timeout;
 
   const _DefaultRoute(
-      {this.verb: HttpVerb.GET,
       this.route,
+      {this.verb: HttpVerb.GET,
       this.library: null,
       this.controller: null,
       this.action: null,

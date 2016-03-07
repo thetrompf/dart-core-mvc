@@ -28,10 +28,10 @@ Iterable<Route> _getLibraryRoutes(LibraryMirror libraryMirror) {
     for(final methodMirror in classMirror.instanceMembers.values) {
       for(final Route annotation in new Metadata<Route>.fromMethodMirror(methodMirror)) {
         routes.add(new Route(
+            annotation.route,
             library: MirrorSystem.getName(libraryMirror.simpleName),
             controller: MirrorSystem.getName(classMirror.simpleName),
             action: MirrorSystem.getName(methodMirror.simpleName),
-            route: annotation.route,
             verb: annotation.verb
         ));
       }

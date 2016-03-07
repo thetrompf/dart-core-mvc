@@ -18,14 +18,14 @@ void main() {
       setUp(() {
         const routes = const <Route>[
           const Route(
+              r'/',
               verb: HttpVerb.GET,
-              route: r'/',
               library: 'router_test.unit.resem.pl',
               controller: 'TestController',
               action: 'test'),
           const Route(
+              r'/matching-uri-non-matching-verb',
               verb: HttpVerb.POST,
-              route: r'/matching-uri-non-matching-verb',
               library: 'TestController',
               action: 'test')
         ];

@@ -41,22 +41,22 @@ class TestApplication extends DefaultApplication {
 
   Future initializeRouter(List<Route> routes) async {
     routes.add(const Route(
+        r'/',
         library: 'simple_request_test.integration.resem.pl',
         controller: 'TestController',
         action: 'index',
-        route: '/',
         verb: HttpVerb.GET));
     routes.add(const Route(
+        r'/throwing-resources',
         library: 'simple_request_test.integration.resem.pl',
         controller: 'TestController',
         action: 'throwing',
-        route: '/throwing-resources',
         verb: HttpVerb.GET));
     routes.add(const Route(
+        r'/timeout',
         library: 'simple_request_test.integration.resem.pl',
         controller: 'TestController',
         action: 'timeout',
-        route: '/timeout',
         verb: HttpVerb.GET,
         timeout: 1));
   }

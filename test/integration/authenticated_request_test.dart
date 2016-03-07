@@ -57,31 +57,31 @@ const WinTokenAuth = const CompositeAuthenticationRequired(const [WinAuth, Token
 
 class TestController extends Controller {
 
-  @Route(route: r'/login', verb: HttpVerb.POST)
+  @Route(r'/login', verb: HttpVerb.POST)
   Future<ActionResult> login() async {
     return jsonResult({'success': true});
   }
 
   @FailAuth
-  @Route(route: r'/my-profile')
+  @Route(r'/my-profile')
   Future<ActionResult> myProfile() async {
     return jsonResult({'name': 'Test'});
   }
 
   @TokenAuth
-  @Route(route: r'/token-auth-test')
+  @Route(r'/token-auth-test')
   Future<ActionResult> tokenTest() async {
     return jsonResult({'success': true});
   }
 
   @TokenAuth @FailAuth @WinAuth
-  @Route(route: r'/multiple-auth')
+  @Route(r'/multiple-auth')
   Future<ActionResult> multipleAuth() async {
     return jsonResult({'win': true});
   }
 
   @WinTokenAuth
-  @Route(route: r'/composite-auth')
+  @Route(r'/composite-auth')
   Future<ActionResult> compositeAuthFail() async {
     return jsonResult({'fail': true});
   }
