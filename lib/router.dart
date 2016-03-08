@@ -6,7 +6,6 @@ import 'dart:io' show HttpRequest, HttpStatus;
 import 'dart:mirrors'
     show ClassMirror, DeclarationMirror, InstanceMirror, LibraryMirror, MethodMirror, MirrorSystem, currentMirrorSystem, reflectClass, reflectType;
 
-import 'package:core_mvc/authentication.dart' show AuthenticationManager;
 import 'package:core_mvc/http.dart' show HttpContext, HttpVerb;
 import 'package:core_mvc/ioc.dart' show Injector;
 import 'package:core_mvc/mvc.dart' show Controller;
