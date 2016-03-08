@@ -1,8 +1,8 @@
-library enum_test.unit.resem.pl;
+library enum_test.unit.core_mvc;
 
 import 'dart:mirrors' show reflectClass;
 
-import 'package:resem.pl/type.dart' show Enum;
+import 'package:core_mvc/type.dart' show Enum;
 import 'package:test/test.dart';
 
 var testMirror = reflectClass(TestEnum);

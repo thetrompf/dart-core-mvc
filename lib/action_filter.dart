@@ -4,9 +4,9 @@
 /// request where the user is not authenticated or not authorized to make
 /// the request.
 ///
-///     import 'package:resem.pl/mvc.dart'
+///     import 'package:core_mvc/mvc.dart'
 ///       show Controller;
-///     import 'package:resem.pl/action_filter.dart'
+///     import 'package:core_mvc/action_filter.dart'
 ///       show AuthenticationFilter, AuthenticationFilterException, FilterContext
 ///
 ///     cont TokenAuth = const TokenAuthFilter();
@@ -34,9 +34,9 @@
 library action_filter;
 
 import 'dart:async' show Future;
-import 'package:resem.pl/http.dart' show HttpContext;
-import 'package:resem.pl/authentication.dart' show AuthenticationManager;
-import 'package:resem.pl/metadata.dart' show Annotation;
+import 'package:core_mvc/http.dart' show HttpContext;
+import 'package:core_mvc/authentication.dart' show AuthenticationManager;
+import 'package:core_mvc/metadata.dart' show Annotation;
 
 part 'src/action_filter/action_filter.dart';
 part 'src/action_filter/authentication_filter.dart';

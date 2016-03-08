@@ -5,7 +5,7 @@ import 'dart:async' show Future;
 import 'dart:convert';
 import 'dart:io' show ContentType, HttpResponse;
 
-import 'package:resem.pl/http.dart' show HttpContext;
+import 'package:core_mvc/http.dart' show HttpContext;
 
 part 'src/action_result/action_result.dart';
 part 'src/action_result/json_result.dart';

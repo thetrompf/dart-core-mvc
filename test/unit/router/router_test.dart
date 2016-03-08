@@ -1,10 +1,10 @@
-library router_test.unit.resem.pl;
+library router_test.unit.core_mvc;
 
 import 'dart:io' show HttpRequest;
 
 import 'package:mockito/mockito.dart';
-import 'package:resem.pl/http.dart' show HttpVerb;
-import 'package:resem.pl/router.dart';
+import 'package:core_mvc/http.dart' show HttpVerb;
+import 'package:core_mvc/router.dart';
 import 'package:test/test.dart';
 
 @TestOn('vm')
@@ -20,13 +20,13 @@ void main() {
           const Route(
               r'/',
               verb: HttpVerb.GET,
-              library: 'router_test.unit.resem.pl',
+              library: 'router_test.unit.core_mvc',
               controller: 'TestController',
               action: 'test'),
           const Route(
               r'/matching-uri-non-matching-verb',
               verb: HttpVerb.POST,
-              library: 'TestController',
+              controller: 'TestController',
               action: 'test')
         ];
         router = new Router(routes);

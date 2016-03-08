@@ -1,4 +1,4 @@
-library authenticated_request_test.integration.resem.pl;
+library authenticated_request_test.integration.core_mvc;
 
 import 'dart:async'
     show Future, Stream;
@@ -7,15 +7,15 @@ import 'dart:io'
 
 import 'package:test/test.dart';
 
-import 'package:resem.pl/mvc.dart'
+import 'package:core_mvc/mvc.dart'
     show Controller, Model;
-import 'package:resem.pl/action_result.dart'
+import 'package:core_mvc/action_result.dart'
     show ActionResult;
-import 'package:resem.pl/resem.pl.dart'
+import 'package:core_mvc/core_mvc.dart'
     show Application, DefaultApplication, HttpVerb, Route;
-import 'package:resem.pl/logger.dart'
+import 'package:core_mvc/logger.dart'
     show Logger, TtyLogger, ERROR_LEVEL;
-import 'package:resem.pl/action_filter.dart'
+import 'package:core_mvc/action_filter.dart'
     show AuthenticationFilter, FilterContext,
     AuthenticationFilterException, CompositeAuthenticationRequired;
 

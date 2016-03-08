@@ -1,4 +1,4 @@
-library controller_action_result_test.integration.resem.pl;
+library controller_action_result_test.integration.core_mvc;
 
 import 'package:test/test.dart';
 

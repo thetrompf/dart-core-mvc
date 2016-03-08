@@ -1,7 +1,7 @@
-library http_verb_test.unit.resem.pl;
+library http_verb_test.unit.core_mv;
 
 import 'package:test/test.dart';
-import 'package:resem.pl/http.dart' show HttpVerb;
+import 'package:core_mvc/http.dart' show HttpVerb;
 
 void main() {
   group('Unit', () {

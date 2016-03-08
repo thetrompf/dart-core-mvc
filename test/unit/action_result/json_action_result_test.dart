@@ -1,11 +1,11 @@
-library json_action_result_test.unit.resem.pl;
+library json_action_result_test.unit.core_mvc;
 
 import 'dart:convert' show JsonUnsupportedObjectError;
 import 'dart:io' show HttpHeaders, HttpResponse;
 
 import 'package:mockito/mockito.dart';
-import 'package:resem.pl/action_result.dart' show JsonResult, ResultContext;
-import 'package:resem.pl/http.dart' show HttpContext;
+import 'package:core_mvc/action_result.dart' show JsonResult, ResultContext;
+import 'package:core_mvc/http.dart' show HttpContext;
 import 'package:test/test.dart';
 
 @TestOn('vm')

@@ -1,32 +1,35 @@
-library demo.resem.pl;
+library demo.core_mvc;
 
-import 'package:resem.pl/resem.pl.dart' show DefaultApplication, Controller, Router, Route;
+import 'package:core_mvc/core_mvc.dart';
 import 'dart:async' show Future;
-import 'package:resem.pl/logger.dart' show Logger, TtyLogger, AnsiPen, VERBOSE_LEVEL;
-import 'package:resem.pl/action_result.dart' show StringResult;
+import 'dart:io' show Platform;
 
 class DemoController extends Controller {
-  Future<StringResult> index() async {
-    return stringResult('Hello, Demo!');
-  }
-}
 
-class DemoApplication extends DefaultApplication {
-  DemoApplication({Logger logger, int port}) : super(logger: logger, port: port);
-
-  Future initializeRouter(List<Route> routes) async {
-    routes.add(const Route(r'/', library: 'demo.resem.pl', controller: 'DemoController', action: 'index'));
+  @Route(r'/')
+  Future<ActionResult> index() async {
+    return stringResult('Hello, World!');
   }
+
+  @Route(r'/', verb: HttpVerb.POST)
+  Future<ActionResult> post() async {
+    return jsonResult({'success': true});
+  }
+
 }
 
 Future main() async {
-  Logger logger = new TtyLogger(
-      group: 'app', groupColor: AnsiPen.yellow, level: VERBOSE_LEVEL, color: false);
-
-  var app = new DemoApplication(logger: logger, port: 3330);
-  try {
-    await app.start();
-  } catch (e) {
-    print(e);
+  Logger logger;
+  if(Platform.environment.containsKey('CORE_MVC_ENV') && Platform.environment['CORE_MVC_ENV'] != 'development') {
+    logger = new JsonLogger(group: 'app');
+  } else {
+    logger = new TtyLogger(
+      group: 'app',
+      groupColor: AnsiPen.yellow,
+      level: DEBUG_LEVEL
+    );
   }
+
+  var app = new Application(logger: logger, port: 3330);
+  await app.start();
 }

@@ -1,8 +1,8 @@
-library class_metadata_test.unit.resem.pl;
+library class_metadata_test.unit.core_mvc;
 
 import 'package:test/test.dart';
-import 'package:resem.pl/metadata.dart';
-import 'package:resem.pl/router.dart';
+import 'package:core_mvc/metadata.dart';
+import 'package:core_mvc/router.dart';
 
 abstract class AuthenticationFilter implements Annotation {}
 

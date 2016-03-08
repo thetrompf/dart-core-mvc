@@ -1,7 +1,7 @@
-library ioc_injector_test.unit.resem.pl;
+library ioc_injector_test.unit.core_mvc;
 
 import 'package:test/test.dart';
-import 'package:resem.pl/ioc.dart' show Injector, DefaultInjector, bind;
+import 'package:core_mvc/ioc.dart' show Injector, DefaultInjector, bind;
 
 abstract class DatabaseConnection {
   String get host;

@@ -1,16 +1,16 @@
-library simple_request_test.integration.resem.pl;
+library simple_request_test.integration.core_mvc;
 
 import 'dart:async' show Future, Timer;
 import 'dart:io' show HttpClient, HttpStatus, InternetAddress;
 
-import 'package:resem.pl/action_result.dart' show ActionResult, StringResult;
-import 'package:resem.pl/application.dart' show Application, DefaultApplication;
-import 'package:resem.pl/http.dart' show HttpVerb;
-import 'package:resem.pl/ioc.dart' show Injector;
-import 'package:resem.pl/logger.dart'
+import 'package:core_mvc/action_result.dart' show ActionResult, StringResult;
+import 'package:core_mvc/application.dart' show Application, DefaultApplication;
+import 'package:core_mvc/http.dart' show HttpVerb;
+import 'package:core_mvc/ioc.dart' show Injector;
+import 'package:core_mvc/logger.dart'
     show Logger, TtyLogger, SILENT_LEVEL, ERROR_LEVEL;
-import 'package:resem.pl/mvc.dart' show Controller;
-import 'package:resem.pl/router.dart' show Route, Router;
+import 'package:core_mvc/mvc.dart' show Controller;
+import 'package:core_mvc/router.dart' show Route, Router;
 import 'package:test/test.dart';
 
 @TestOn("vm")
@@ -42,19 +42,19 @@ class TestApplication extends DefaultApplication {
   Future initializeRouter(List<Route> routes) async {
     routes.add(const Route(
         r'/',
-        library: 'simple_request_test.integration.resem.pl',
+        library: 'simple_request_test.integration.core_mvc',
         controller: 'TestController',
         action: 'index',
         verb: HttpVerb.GET));
     routes.add(const Route(
         r'/throwing-resources',
-        library: 'simple_request_test.integration.resem.pl',
+        library: 'simple_request_test.integration.core_mvc',
         controller: 'TestController',
         action: 'throwing',
         verb: HttpVerb.GET));
     routes.add(const Route(
         r'/timeout',
-        library: 'simple_request_test.integration.resem.pl',
+        library: 'simple_request_test.integration.core_mvc',
         controller: 'TestController',
         action: 'timeout',
         verb: HttpVerb.GET,

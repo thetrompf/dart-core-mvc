@@ -6,12 +6,12 @@ import 'dart:io' show HttpRequest, HttpStatus;
 import 'dart:mirrors'
     show ClassMirror, DeclarationMirror, InstanceMirror, LibraryMirror, MethodMirror, MirrorSystem, currentMirrorSystem, reflectClass, reflectType;
 
-import 'package:resem.pl/http.dart' show HttpContext, HttpVerb;
-import 'package:resem.pl/ioc.dart' show Injector;
-import 'package:resem.pl/mvc.dart' show Controller;
-import 'package:resem.pl/action_filter.dart' show ActionFilter, ActionFilterException, AuthenticationFilter, AuthenticationFilterContext, AuthorizationFilter, FilterContext;
-import 'package:resem.pl/authentication.dart' show AuthenticationManager;
-import 'package:resem.pl/metadata.dart' show Annotation, Metadata;
+import 'package:core_mvc/authentication.dart' show AuthenticationManager;
+import 'package:core_mvc/http.dart' show HttpContext, HttpVerb;
+import 'package:core_mvc/ioc.dart' show Injector;
+import 'package:core_mvc/mvc.dart' show Controller;
+import 'package:core_mvc/action_filter.dart' show ActionFilter, ActionFilterException, AuthenticationFilter, AuthenticationFilterContext, AuthorizationFilter, FilterContext;
+import 'package:core_mvc/metadata.dart' show Annotation, Metadata;
 
 part 'src/router/route.dart';
 part 'src/router/router.dart';

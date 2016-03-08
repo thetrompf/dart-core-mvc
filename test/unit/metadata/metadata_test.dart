@@ -1,7 +1,7 @@
-library metadata_test.unit.resem.pl;
+library metadata_test.unit.core_mvc;
 
 import 'package:test/test.dart';
-import 'package:resem.pl/metadata.dart';
+import 'package:core_mvc/metadata.dart';
 
 class ClassAnnotation implements Annotation {
   const ClassAnnotation();

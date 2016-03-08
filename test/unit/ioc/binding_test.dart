@@ -1,6 +1,6 @@
-library ioc_binding_test.unit.resem.pl;
+library ioc_binding_test.unit.core_mvc;
 
-import 'package:resem.pl/ioc.dart'
+import 'package:core_mvc/ioc.dart'
     show
         Binding,
         CyclicDependencyException,

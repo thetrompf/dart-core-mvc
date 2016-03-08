@@ -1,7 +1,9 @@
-name: resem.pl
-author: thetrompf, resemple ltd. <bkc@resem.pl>
+name: core_mvc
+author: thetrompf, resem.pl <bkc@resem.pl>
+description: MVC framework inspired by ASP.NET MVC now known as CoreMVC
 version: 0.1.0
 license: BSD
+homepage: https://github.com/thetrompf/dart-core-mvc
 dev_dependencies:
   test: any
   mockito: any
