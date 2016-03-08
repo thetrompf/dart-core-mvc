@@ -1,3 +1,4 @@
+/// The [metadata] library.
 library metadata;
 
 import 'dart:mirrors';
