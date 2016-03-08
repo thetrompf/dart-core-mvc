@@ -1,9 +1,7 @@
 name: resem.pl
 author: thetrompf, resemple ltd. <bkc@resem.pl>
-version: 0.0.1
+version: 0.1.0
 license: BSD
-dependencies:
-  browser: any
 dev_dependencies:
   test: any
   mockito: any
