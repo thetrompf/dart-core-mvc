@@ -1,4 +1,32 @@
-/// The [action_result] library.
+/// This library contains the basic classes interfaces
+/// to encode data and write to the response object.
+///
+///     class CensorResult implements ActionResult {
+///
+///       final String output;
+///       CustomResult(this.output);
+///
+///       Future executeResult(ResultContext context) async {
+///         context.response.write(output.replaceAll('Dirty words','Clean words'));
+///       }
+///
+///     }
+///
+///     class SomeController extends Controller {
+///
+///       Future<ActionResult> json() async {
+///         return jsonResult({'hello':'World'});
+///       }
+///
+///       Future<ActionResult> string() async {
+///         return stringResult(r'Hello World');
+///       }
+///
+///       Future<ActionResult> custom() async {
+///         return new CensorResult(r'Dirty words');
+///       }
+///
+///     }
 library action_result;
 
 import 'dart:async' show Future;

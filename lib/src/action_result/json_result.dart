@@ -1,6 +1,9 @@
 part of action_result;
 
+/// JsonResult converts objects that are JSON serializable
+/// and writes it to the response object.
 class JsonResult implements ActionResult {
+
   final Object output;
   JsonResult(this.output);
 

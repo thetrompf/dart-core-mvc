@@ -5,7 +5,10 @@ part of action_filter;
 /// [ActionFilter] annotated on controller actions
 /// in the action filter lifecycle phase of the application.
 abstract class FilterContext {
+
+  /// The inner context to access the request and response object through.
   HttpContext get httpContext;
+
   factory FilterContext({HttpContext httpContext}) = DefaultFilterContext;
 }
 
@@ -27,6 +30,7 @@ abstract class AuthenticationFilterContext extends FilterContext {
 
 /// Default implementation of the [FilterContext] interface.
 class DefaultFilterContext implements FilterContext {
+
   final HttpContext httpContext;
   DefaultFilterContext({this.httpContext});
 }
